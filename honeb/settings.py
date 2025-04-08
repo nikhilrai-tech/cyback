@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-p3%phmthoys#bb6yw)hfkk%bpe@!!^!w_v(rz0uptj)x-^w%d*
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True   
 
-ALLOWED_HOSTS = ['.cyber3ra.com','localhost','127.0.0.1','127.0.1.1','.cyber3ra-backend-main.azurewebsites.net']
+ALLOWED_HOSTS = ['.cyber3ra.com','localhost','127.0.0.1','127.0.1.1','.cyber3ra-backend-main.azurewebsites.net',"*"]
 
 APP_PROD = False
 APP_DOMAIN = 'https://cyber3ra-backend-main.azurewebsites.net' if APP_PROD else 'http://localhost:8060'
