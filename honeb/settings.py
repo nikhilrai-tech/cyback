@@ -227,7 +227,7 @@ CORS_ALLOWED_ORIGINS = [
     # 'http://127.0.0.1:3005',
     # 'http://127.0.0.1:53622',
     'https://cyfront.vercel.app',
-    'http://172.23.9.138:36719'
+    'http://172.17.242.201:38765'
     # 'http://cyber3ra.com',
 ]
 
