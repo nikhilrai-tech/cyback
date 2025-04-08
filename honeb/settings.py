@@ -226,7 +226,7 @@ CORS_ALLOWED_ORIGINS = [
     # "http://localhost:3005",
     # 'http://127.0.0.1:3005',
     # 'http://127.0.0.1:53622',
-    'https://app.cyber3ra.com',
+    'https://cyfront.vercel.app',
     'http://172.23.9.138:36719'
     # 'http://cyber3ra.com',
 ]
@@ -234,12 +234,12 @@ CORS_ALLOWED_ORIGINS = [
 # USE_TZ = False
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_USE_TLS = False
-EMAIL_USE_SSL = True
-EMAIL_PORT = 465
-EMAIL_HOST = 'smtppro.zoho.in'
-EMAIL_HOST_USER = 'info@cyber3ra.com'
-EMAIL_HOST_PASSWORD = 'h5cFzY2evNiU'
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+EMAIL_PORT = 587
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'nikhilrai662@gmail.com'
+EMAIL_HOST_PASSWORD = 'mnkr wvoa drfo rauv'
 
 EMAIL_HOST_NAME = 'Cyber3ra <'+EMAIL_HOST_USER+'>'
 # EMAIL_HOST_NAME = 'no-reply@cyber3ra.com'
