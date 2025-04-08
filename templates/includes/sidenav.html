@@ -1,0 +1,93 @@
+
+{% if not is_popup %}
+    <div class="sidebar {% if not request.user.is_authenticated %}d-nonec{%endif%}" style="overflow-y: scroll;">
+        <div class="sidebar-wrapper bg-info2 d-flex flex-column">
+          <div class="logo">
+            <a target="_blank" rel="sponsored noopener noreferrer" 
+               href="https://cyber3ra.com" class="simple-text logo-normal">
+               <img src="/static/logo.png" alt="Cyber3ra" width="40" height="40" class="mr-2">
+                Cyber3ra
+            </a>
+          </div>
+  
+          <ul class="nav flex-grow-1">
+          {% if request.user.is_authenticated %}
+  
+            <li class="activec">
+              <a href="#search" data-toggle="modal" data-target="#searchModal">
+                <i data-feather="search" class="mr-2 nav-icon"></i>
+                Search 
+              </a>
+            </li>
+  
+            <li class="{% ifequal '/panel/' request.path %} active {% endifequal %}">
+              <a href="/panel/" >
+                <i data-feather="activity" class="mr-2 nav-icon"></i>
+                Dashboard 
+              </a>
+            </li>
+
+            
+
+            {% block nav-sidebar %}
+              {% include "admin/nav_sidebar.html" %}
+            {% endblock %}
+            
+            {% if request.user.is_admin %}
+            <li class="{% ifequal '/panel/sendemail' request.path %} active {% endifequal %}">
+              <a href="/panel/sendemail" >
+                <i data-feather="mail" class="mr-2 nav-icon"></i>
+                Email 
+              </a>
+            </li>
+            {% endif %}
+  
+            <li class="{% ifequal '/panel/about' request.path %} active {% endifequal %}">
+              <a href="/panel/about" >
+                <i data-feather="info" class="mr-2 nav-icon"></i>
+                About App 
+              </a>
+            </li>
+  
+            <li class="{% ifequal '/panel/settings' request.path %} active {% endifequal %}">
+              <a href="/panel/settings" >
+                <i data-feather="settings" class="mr-2 nav-icon"></i>
+                Settings 
+              </a>
+            </li>
+
+
+            
+          
+            {% else %}
+            <li class="activec">
+              <a target="_blank" 
+                 href="https://cyber3ra.com">
+                <i data-feather="tool" class="mr-2 nav-icon"></i> User Panel
+              </a>
+            </li>   
+            {% endif %}
+                      
+          </ul>
+
+          
+
+
+            {% block breadcrumbs %}
+            <!-- <li class="breadcrumbs">
+              <a href="/panel/" >
+                Home {% if title %} &rsaquo; {{ title }}{% endif %}
+              </a>
+            </li> -->
+            <div class="breadcrumbs">
+              <a href="/panel/">Home</a>
+                {% if title %} &rsaquo; {{ title }}{% endif %}
+            </div>  
+            {% endblock %}
+
+
+
+          
+        </div>
+      </div>
+  {%endif%}

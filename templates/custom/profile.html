@@ -1,0 +1,191 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls static admin_list card_list %}
+
+{% block extrastyle %}
+  {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static "admin/css/select.css" %}">
+{% endblock %}
+
+{% block title %}Profile
+{{ block.super }}
+{% endblock %}
+
+{% block extrahead %}
+{{ block.super }}
+{{ media.js }}
+{% endblock %}
+
+{% block bodyclass %}{{ block.super }} app-{{ opts.app_label }} model-{{ opts.model_name }} change-list{% endblock %}
+
+{% if not is_popup %}
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'admin:index' %}">{% translate 'Home' %}</a>
+&rsaquo; <a href="{% url 'admin:app_list' app_label=cl.opts.app_label %}">{{ cl.opts.app_config.verbose_name }}</a>
+&rsaquo; {{ cl.opts.verbose_name_plural|capfirst }}
+</div>
+{% endblock %}
+{% endif %}
+
+{% block coltype %}{% endblock %}
+
+{% block content_title %}
+<h1>Profile</h1>{% endblock %}
+
+{% block content %}
+  <div id="content-main">
+      <div class="row">
+          <div class="col-md-4">
+              <div class="d-flex flex-column align-items-center">
+                  <div class="d-flex justify-content-around w-100">
+                      <a href="profilepic" class="btn btn-error btn-sm" rel="tooltip" title="Remove {% if request.user.is_admin %}Profile Pic{% else %}Company Logo{% endif %}"><i data-feather="trash" class="feather-small"></i></a>
+                      <button class="btn btn-warning btn-sm" rel="tooltip" onclick="document.getElementById('profile').click()" title="Edit {% if request.user.is_admin %}Profile Pic{% else %}Company Logo{% endif %}"><i data-feather="edit-2" class="feather-small"></i></button>
+                      <form action="profilepic" method="post" class="d-none" id="propic" enctype="multipart/form-data">{% csrf_token %}
+                          <input type="file" name="file" hidden  accept="image/*" id="profile" onchange="document.getElementById('propic').submit()">
+                      </form>
+                  </div>
+                <img src="{% if request.user.photo %}{{ request.user.photo.url}}{% else %}/static/user.jpg{% endif %}" 
+                width="150" height="150" style="object-fit: cover;" class="rounded-circle mb-2" alt="{{request.user.username}}">
+                <h3 class="mb-2">{{request.user.username}}</h3>
+                <h4>{{ request.user.email }}</h4>
+              </div>
+          </div>
+          <div class="col-md-8">
+              <div class="card">
+                  <div class="card-header">
+                      <div class="card-title"><h3 class="mb-0"><span class="wish"></span> {% if request.user.name %}{{ request.user.name }}{% else %}{{ request.user.username }}{% endif %}!</h3></div>
+                  </div>
+                  <hr class="m-0">
+                  <div class="card-body">
+                      <p>Your Profile is {% if complete %}{{complete}}%{% else %}0%{% endif %} complete</p>
+                      <div class="progress mt-2">
+                        <div class="progress-bar" role="progressbar" aria-valuenow="50" data-value="{{complete}}" aria-valuemin="0" aria-valuemax="100"></div>
+                      </div>
+                  </div>
+                  <hr class="m-0">
+                  <div class="card-footer">
+                      <button data-toggle="modal" data-target="#profileOverview" class="btn ">Profile Overview</button>
+                  </div>
+              </div>
+
+                <div class="modal fade" tabindex="-1" role="dialog" id="profileOverview">
+                    <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h3 class="modal-title">Profile Overview</h3>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true"><i data-feather="x" class="feather-small"></i></span>
+                        </button>
+                        </div>
+                        <div class="modal-body">
+                            <h5 class="mb-3">Completion {{complete}}%</h5>
+
+                            <!-- <div class="d-flex justify-content-center">
+                                <div class=" d-flex justify-content-center align-items-center py-1 px-3">
+                                    <div class="bg-warning rounded-circle d-flex justify-content-center align-items-center p-2">
+                                        <i data-feather="user" class="feather-small text-white"></i>
+                                    </div>
+                                </div>
+                                <div class="d-flex flex-column flex-grow-1">
+                                    <h6 class="m-0">Username (10%)</h6>
+                                    <div class="progress mt-2">
+                                        <div class="progress-bar" role="progressbar" aria-valuenow="100" data-value="100" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-center align-items-center p-3"><i data-feather="check" class="feather-small text-success"></i></div>
+                            </div>
+                            -->
+                            {% for a in all %}
+                            <div class="d-flex justify-content-center my-1">
+                                <div class=" d-flex justify-content-center align-items-center py-1 px-3">
+                                    <div class="bg-warning rounded-circle d-flex justify-content-center align-items-center p-2">
+                                        <i data-feather="user" class="feather-small text-white"></i>
+                                    </div>
+                                </div>
+                                <div class="d-flex flex-column flex-grow-1 justify-content-center">
+                                    <h6 class="m-0">{{a.label}}</h6>
+                                    <div class="progress mt-2">
+                                        <div class="progress-bar" role="progressbar" aria-valuenow="100" data-value="{% if a.val %}100{%else%}0{%endif%}" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-center align-items-center p-3">
+                                    <i data-feather="{% if a.val %}check{%else%}x{%endif%}" class="feather-small text-{% if a.val %}success{%else%}error{%endif%}"></i></div>
+                            </div>
+                            {% endfor %}
+
+
+
+
+
+
+
+
+                        </div>
+                        <div class="modal-footer justify-content-center">
+                            <button type="button" class="btn btn-link" data-dismiss="modal">OK</button>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+          </div>
+          <div class="col-md-12">
+            <div class="p-4"></div>    
+        </div>
+
+          <div class="col-md-12">
+              <form action="" method="post" class="card">
+                  {% csrf_token %}
+                  <div class="card-header d-flex align-items-center justify-content-between">
+                      <div class="card-title mb-0">
+                          <h4 class="mb-0">Details</h4>
+                      </div>
+                  <div class=""><button class="btn btn-success">Save</button></div>
+                  </div>
+                <div class="row card-body">
+                    <div class="col-md-6">
+                        <!-- <label for="name">Name</label> -->
+                        <input type="text" name="name" value="{{request.user.name}}" placeholder="Name" id="name" class="w-100"/>
+                    </div>
+                    <div class="col-md-6">
+                        <!-- <label for="name">Name</label> -->
+                        <input type="text" name="website" value="{{request.user.website}}" placeholder="Website" id="website" class="w-100"/>
+                    </div>
+                    <div class="col-md-12 py-3">
+                        <!-- <label for="bio">{% if request.user.is_admin %}Bio{% else %}Company Slogan{% endif %}</label> -->
+                        <textarea type="text" name="bio" value="{{request.user.bio}}" class="w-100" placeholder="{% if request.user.is_admin %}Bio{% else %}Company Slogan{% endif %}" id="bio">{{request.user.bio}}</textarea>
+                    </div>
+                </div>
+              </form>
+          </div>
+
+
+
+      </div>
+  </div>
+{% endblock %}
+
+
+{% block javascripts %}
+<script>
+    const getwish = () => {
+      var day = new Date();
+        var hr = day.getHours();
+        if (hr >= 0 && hr < 12) {
+            return "Good Morning";
+        } else if (hr === 12) {
+            return "Good Noon";
+        } else if (hr >= 12 && hr <= 17) {
+            return "Good Afternoon";
+        } else {
+            return "Good Evening";
+        }
+    }
+    $('.wish').html(getwish())
+    $('.progress-bar[data-value]').each(function(){
+        // console.log('l')
+        // console.log($(this).attr("data-value"))
+        $(this).css('width',$(this).attr("data-value")+'%')
+    });
+</script>
+
+{% endblock %}

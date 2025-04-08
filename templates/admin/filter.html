@@ -1,0 +1,17 @@
+{% load i18n %}
+
+
+
+<label for="filter-{{ title|cut:' ' }}" class="mt-4">{{ title }}</label>
+<div class="dropdown nav-item d-block  mt-2">
+    <button href="javascript:void(0)" id="filter-{{ title|cut:' ' }}" class="dropdown-toggle nav-link btn btn-success btn-simple point d-block" data-toggle="dropdown">
+        {% blocktranslate with filter_title=title %} By {{ filter_title }} {% endblocktranslate %}
+    </button>
+    <ul class="dropdown-menu dropdown-menu-left dropdown-navbar">
+        {% for choice in choices %}
+        <li class="nav-link px-1 py-0">
+            <a href="{{ choice.query_string|iriencode }}" title="{{ choice.display }}" class="nav-item p-2 {% if choice.selected %}active{% endif %} dropdown-item">{{ choice.display }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+</div>

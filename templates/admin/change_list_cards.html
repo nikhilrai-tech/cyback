@@ -1,0 +1,109 @@
+{% load i18n %}
+{% if result_hidden_fields %}
+<div class="hiddenfields">{# DIV for HTML validation #}
+{% for item in result_hidden_fields %}{{ item }}{% endfor %}
+</div>
+{% endif %}
+{% if results %}
+<div class="row">
+  
+{% for result in results %}
+{% if result.form and result.form.non_field_errors %}
+    <div><td colspan="{{ result|length }}">{{ result.form.non_field_errors }}</td></div>
+{% endif %}
+<div>{{result}}</div>
+{% endfor %}
+
+</div>
+{% endif %}
+
+
+
+
+
+
+<div class="row d-none">
+  <div class="col-xl-4 col-lg-6 col-md-6 card">
+      <div class="card-type {{card.type}}" rel="tooltip" title="User Type"></div>
+      <div class="card-body pb-0">
+        <div class="row">
+          <div class="col-5 bg-warningc align-items-center">
+            <div class="d-flex align-items-center h-100">
+              <!-- <img src="https://i.natgeofe.com/n/2a832501-483e-422f-985c-0e93757b7d84/6.jpg" height="70" width="70" class="rounded-circle" alt=""> -->
+              <img src="{% if card.image %}{{card.image}}{% else %}https://socialistmodernism.com/wp-content/uploads/2017/07/placeholder-image.png?w=640{% endif %}" 
+              height="70" width="70" class="rounded-circle" alt="Profile Image">
+            </div>
+          </div>
+          <div class="col-7 bg-errorc">
+            <div class="text-right">
+              <h4 class="card-category">{{card.secondary}}</h4>
+              <h3 class="card-title mb-0">
+                {{card.primary}}
+                <!-- <img src="{% if card.image %}{{card.image}}{% else %}https://socialistmodernism.com/wp-content/uploads/2017/07/placeholder-image.png?w=640{% endif %}" alt="Verified"> -->
+                {% if card.ok %}<img src="/static/admin/img/icon-yes.svg" alt="Verified">{%endif%}
+                <!-- <img src="/static/admin/img/icon-yes.svg" alt="Verified"> -->
+
+              </h3>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer pt-0">
+        <hr>
+        <div class="card-actions">
+          {% for action in card.actions %}
+          <!-- <a href="/panel/back/user">Email</a>
+          <a href="/panel/back/user">Email</a> -->
+          {{action}}
+          {% endfor %}
+        </div>
+      </div>
+  </div>
+</div>
+
+
+{% if cards %}
+<div class="row">
+  {% for card in cards %}
+  <div class="col-xl-4 col-lg-6 col-md-6">
+    <div class="card">
+      {% if card.type %}<div class="card-type type-{{card.type}}" rel="tooltip" title="{{card.type}}"></div>{%endif%}
+      <div class="card-body pb-0">
+        <div class="row">
+          <div class="col-5 bg-warningc align-items-center">
+            <div class="d-flex align-items-center h-100">
+              <!-- <img src="https://i.natgeofe.com/n/2a832501-483e-422f-985c-0e93757b7d84/6.jpg" height="70" width="70" class="rounded-circle" alt=""> -->
+              <img src="{{card.image}}" 
+              height="70" width="70" class="rounded-circle" alt="Profile Image">
+            </div>
+          </div>
+          <div class="col-7 bg-errorc">
+            <div class="text-right">
+              <h4 class="card-category">{{card.secondary}}</h4>
+              <h3 class="card-title mb-0">
+                {{card.primary}}
+                <!-- <img src="{% if card.image %}{{card.image}}{% else %}https://socialistmodernism.com/wp-content/uploads/2017/07/placeholder-image.png?w=640{% endif %}" alt="Verified"> -->
+                {% if card.ok %}<img src="/static/admin/img/icon-yes.svg" alt="Verified">{%endif%}
+                <!-- <img src="/static/admin/img/icon-yes.svg" alt="Verified"> -->
+
+              </h3>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer pt-0">
+        <hr>
+        <div class="card-actions">
+          {% for action in card.actions %}
+          <!-- <a href="/panel/back/user">Email</a>
+          <a href="/panel/back/user">Email</a> -->
+          {{action | safe}}
+          {% endfor %}
+        </div>
+      </div>
+
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}

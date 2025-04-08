@@ -1,0 +1,426 @@
+{% load static %}{% load i18n static %}<!DOCTYPE html>
+{% get_current_language as LANGUAGE_CODE %}{% get_current_language_bidi as LANGUAGE_BIDI %}
+<html lang="{{ LANGUAGE_CODE|default:"en-us" }}" dir="{{ LANGUAGE_BIDI|yesno:'rtl,ltr,auto' }}">
+<head>
+<title>{% block title %}{% endblock %}</title>
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/dash.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/nav.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/res.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/side.css' %}">
+
+
+
+
+
+  <script src="{% static 'js/nav.js' %}" defer></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<style>
+  
+  p {
+    /* margin: 0; */
+  }
+  body {
+    /* margin: 0; */
+    padding: 0;
+  font-family: Segoe UI Emoji;
+  }
+
+  #cyber-header {
+    display: flex;
+  }
+  #cyber-branding {
+    display: flex;
+    flex-grow: 1;
+    /* background-color: yellow; */
+  }
+  .cyber-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.cyber-dropdown-content {
+  display: none;
+  position: absolute;
+  min-width: 160px;
+  padding: 5px 0px;
+  z-index: 5500 !important;
+  right: 0;
+  flex-direction: column;
+}
+
+.cyber-dropdown:hover .cyber-dropdown-content {
+  display: flex;
+  -webkit-animation-name: fadeIn;
+  animation-name: fadeIn;
+  -webkit-animation-duration: 1000ms;
+  animation-duration: 1000ms;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+}
+@keyframes fadeIn {
+   0% {opacity: 0;}
+   100% {opacity: 1;}
+} 
+@-webkit-keyframes fadeIn {
+            0% {opacity: 0;}
+            100% {opacity: 1;}
+         }
+         
+.no-but{
+  outline: 0;
+  border: none;
+  color: inherit;
+  padding: inherit;
+  cursor: pointer;
+  background-color: transparent;
+  padding: 10px 16px;
+  font-size: inherit;
+  text-align: left;
+}
+/* #check01:checked~.cyber-dropdown-content {
+  display: flex;
+} */
+#check01 {
+  display: none;
+}
+.cyber-dropdown-item {
+  padding: 10px 16px;
+}
+
+.cyber-messagelist {
+  position: absolute;
+  background-color: transparent;
+  top: 20px;
+  left: 50%;
+  transform: translate(50%,0,0);
+  width: auto;
+  min-width: 100px;
+  height: auto;
+  min-height: 25px;
+  z-index: 6000 !important;
+}
+
+/* COLORS */
+.light {
+    --background: #f6f8fa;
+    --card2: #fff;
+    --card2-dark: #F1F2F8;
+    --card1: #fff;
+    --text: #020927;
+    /* --text: #0d0f18; */
+    --card1-light: #F1F2F8;
+    --divider: #d0d7de; 
+    --hairline-color: #d0d7de !important;
+    --text-h: #000;
+    --scrollcolor: #061021;
+    --elevation: rgb(100 100 111 / 20%) 0px 7px 29px 0px;
+  }
+  .dark {
+    --background: #0a0e14;
+    /* --background: #010409; */
+    --card2: #161b22;
+    --card2-dark: #131820;
+    --card1: #0d1117;
+    --card1-light: rgba(255, 255, 255, 0.08);
+    --text: #c6cfdd;
+    /* --text: #b0bccf; */
+    --divider: rgba(255, 255, 255, 0.08) ;
+    --hairline-color: rgba(255, 255, 255, 0.08) !important;
+    --text-h: #fff;
+    --scrollcolor: #58a6ff;
+    --elevation: 0px 3px 5px -1px rgb(0 0 0 / 20%), 0px 6px 10px 0px rgb(0 0 0 / 14%), 0px 1px 18px 0px rgb(0 0 0 / 12%);
+  }
+
+  body {
+    background-color: var(--background);
+  }
+  div, p,h4,h5,h6, button,a {
+    color:  var(--text);
+  }
+  h1,h2, h3 {
+    color: var(--text-h);
+  }
+  #cyber-header {
+    background-color: var(--card1);
+    box-shadow: var(--elevation);
+  }
+.cyber-dropdown-content {
+    background-color: var(--card1);
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+.cyber-dropdown-item:hover {
+  background-color: var(--card1-light);
+}
+.card {
+  background-color: var(--card2) !important;
+}
+.card-header {
+  background-color: var(--card2-dark) !important;
+  border-bottom: 1px solid var(--divider) !important;
+}
+.card-body {
+  background-color: var(--card2) !important;
+}
+.bg-trans {
+  background-color: transparent !important;
+}
+.br-20 {
+  border-radius: 20px !important;
+}
+.br-15 {
+  border-radius: 15px !important;
+}
+.br-10 {
+  border-radius: 10px !important;
+}
+.br-5 {
+  border-radius: 5px !important;
+}
+.br-t-20 {
+  border-top-left-radius: 20px !important;
+  border-top-right-radius: 20px !important;
+}
+.br-t-15 {
+  border-top-left-radius: 15px !important;
+  border-top-right-radius: 15px !important;
+}
+.br-t-10 {
+  border-top-left-radius: 10px !important;
+  border-top-right-radius: 10px !important;
+}
+.br-t-5 {
+  border-top-left-radius: 5px !important;
+  border-top-right-radius: 5px !important;
+}
+.br-b-20 {
+  border-bottom-left-radius: 20px !important;
+  border-bottom-right-radius: 20px !important;
+}
+.br-b-15 {
+  border-bottom-left-radius: 15px !important;
+  border-bottom-right-radius: 15px !important;
+}
+.br-b-10 {
+  border-bottom-left-radius: 10px !important;
+  border-bottom-right-radius: 10px !important;
+}
+.br-b-5 {
+  border-bottom-left-radius: 5px !important;
+  border-bottom-right-radius: 5px !important;
+}
+.divider {
+  color: var(--divider) !important;
+}
+.border-d {
+  border-color: var(--divider) !important;
+}
+.module h1,h2,h3 {
+  color: var(--text-h) !important;
+}
+.module div, p, h4.h5,h6,span, button,a {
+  color: var(--text-h) !important;
+}
+</style>
+</head>
+
+<body id="body" class="{% if is_popup %}popup {% endif %}{% block bodyclass %}{% endblock %} dark"
+  data-admin-utc-offset="{% now "Z" %}">
+
+  <!-- <img src="{% static 'bg2.webp' %}" id="bg-image" > -->
+<!-- Container -->
+<div id="containerc">
+
+    {% if not is_popup %}
+    <!-- Header -->
+    {% block header %}
+    <div id="cyber-header">
+        <div id="cyber-branding" class="flex bg-bluec">
+        <!-- {% block branding %}{% endblock %} -->
+          <img src="{% static 'logo.webp' %}" width="70" height="70" >
+          
+        </div>
+        <!-- {% block usertools %} -->
+        {% if has_permission %}
+          <div id="user-toolsc" class="cyber-tools bg-pinkc">
+
+            <div>
+              
+              <div class="cyber-dropdown">
+                <!-- <label for="check01" class="cyber-dropdown-main"> -->
+                  <img class="cyber-avatar point" id="cyber-main" src="/media/{{user.photo}}" width="70" height="70">
+                <!-- </label> -->
+                <input id="check01" type="checkbox" name="menu" />
+                <div class="cyber-dropdown-content">
+                    <div class='flex'>
+                      {% if user.photo %}
+                        <img src="/media/{{user.photo}}" width="70" height="70" />
+                      {% else %}
+                        <img src='https://freerangestock.com/sample/140772/hooded-hacker-as-a-skull-of-computer-code.jpg' width="70" height="70" />
+                      {% endif %}
+                      <div class='d-flex flex-col pl-2 justify-content-center'>
+                          <div class='text-sm' style="width: auto;">{{user.name}}</div>
+                          <div class='text-xs'>{{user.username}}</div>
+                      </div>
+                      <div class='flex bg-red-500c align-items-center pl-3'>
+                          {% if user.is_confirmed %}
+                          <div class='rounded-full h-4 w-4 bg-success' style="width: 25px;height: 25px;"></div>
+                          {% else %}
+                          <div class='rounded-full h-4 w-4 bg-error' style="width: 25px;height: 25px;"></div>
+                          {% endif %}
+                      </div>
+                  </div>
+                  
+                    {% block userlinks %}
+                        {% if site_url %}
+                            <a class="cyber-dropdown-item" href="{{ site_url }}">{% translate 'View site' %}</a>
+                        {% endif %}
+                        {% if user.is_active and user.is_staff %}
+                            {% url 'django-admindocs-docroot' as docsroot %}
+                            {% if docsroot %}
+                                <a class="cyber-dropdown-item" href="{{ docsroot }}">{% translate 'Documentation' %}</a>
+                            {% endif %}
+                        {% endif %}
+                        {% if user.has_usable_password %}
+                        <a class="cyber-dropdown-item" href="{% url 'admin:password_change' %}">{% translate 'Change password' %}</a>
+                        {% endif %}
+                        <a class="cyber-dropdown-item" href="{% url 'admin:logout' %}">{% translate 'Log out' %}</a>
+                    {% endblock %}
+                    <button onclick="toggletheme()" class="cyber-dropdown-item no-but"><p>Toggle</p></button>
+                </div>
+              </div>
+            </div>
+            
+        </div>
+        {% endif %}
+        <!-- {% endblock %} -->
+        {% block nav-global %}{% endblock %}
+    </div>
+    {% endblock %}
+    <!-- END Header -->
+
+
+
+
+
+
+
+
+
+
+    {% block breadcrumbs %}
+    <div class="breadcrumbs">
+    <a href="{% url 'admin:index' %}">{% translate 'Home' %}</a>
+    {% if title %} &rsaquo; {{ title }}{% endif %}
+    </div>
+    {% endblock %}
+    {% endif %}
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class="main" id="main">
+
+
+
+      {% if not is_popup and is_nav_sidebar_enabled %}
+        {% block nav-sidebar %}
+          {% include "admin/nav_sidebar.html" %}
+        {% endblock %}
+      {% endif %}
+
+
+
+
+
+      <div class="content">
+
+
+
+        <!-- <ul class="cyber-messagelist">{% for message in messages %}
+          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|capfirst }}</li>
+        {% endfor %}</ul> -->
+        {% block messages %}
+          {% if messages %}
+            <ul class="cyber-messagelist">{% for message in messages %}
+              <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|capfirst }}</li>
+            {% endfor %}</ul>
+          {% endif %}
+        {% endblock messages %}
+
+
+
+
+        <!-- Content -->
+        <div id="content" class="{% block coltype %}colM{% endblock %}">
+          {% block pretitle %}{% endblock %}
+          {% block content_title %}{% if title %}<h1 class="mb-1">{{ title }}</h1>{% endif %}{% endblock %}
+          {% block content_subtitle %}{% if subtitle %}<h2>{{ subtitle }}</h2>{% endif %}{% endblock %}
+          {% block content %}
+            {% block object-tools %}{% endblock %}
+            {{ content }}
+          {% endblock %}
+
+
+          {% block sidebar %}{% endblock %}
+          <br class="clear">
+        </div>
+        <!-- END Content -->
+        {% block footer %}<div id="footer"></div>{% endblock %}
+      </div>
+    </div>
+</div>
+<!-- END Container -->
+<script defer>
+  console.log('hi')
+  console.log(localStorage)
+  console.log(localStorage.getItem('theme'))
+  if(localStorage.getItem('theme')!==null){
+    if(localStorage.getItem('theme')=='dark'){
+      document.body.classList.replace('light','dark')
+    }
+    else if(localStorage.getItem('theme')=='light'){
+      document.body.classList.replace('dark','light')
+    }
+    else{
+      console.log('alag level theme')
+    }
+  }
+  else{
+    localStorage.setItem('theme','dark')
+  }
+
+  const toggletheme =() => {
+  if(localStorage.getItem('theme')!==null){
+    if(localStorage.getItem('theme')=='dark'){
+      document.body.classList.replace('dark','light')
+      localStorage.setItem('theme','light')
+    }
+    else if(localStorage.getItem('theme')=='light'){
+      document.body.classList.replace('light','dark')
+      localStorage.setItem('theme','dark')
+    }
+    else{
+      console.log('alag level theme')
+    }
+  }
+  }
+  $('#body').onload = function(){
+    console.log('enetered')
+    console.log(localStorage)
+    console.log(localStorage.getItem('theme'))
+  };
+
+</script>
+</body>
+</html>

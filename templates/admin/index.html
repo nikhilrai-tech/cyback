@@ -1,0 +1,644 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "admin/css/dashboard.css" %}">{% endblock %}
+
+{% block coltype %}colMS{% endblock %}
+
+{% block bodyclass %}{{ block.super }} dashboard{% endblock %}
+
+{% block breadcrumbs %}{% endblock %}
+
+{% block nav-sidebar %}{% endblock %}
+{% block title %} {{request.user.get_type_display}} Dashboard | {{block.super}}{% endblock %}
+
+{% block content_title %}
+<h1>{{request.user.get_type_display}} Dashboard </h1>{% endblock %}
+
+
+
+{% block content %}
+<div id="content-main">
+    {% if app_list %}
+    <div class="row">
+
+      <div class="col-lg-3 col-md-6">
+        <div class="card card-stats">
+          <div class="card-body pb-0">
+            <div class="row">
+              <div class="col-5 bg-warningc align-items-center">
+                <div class="d-flex align-items-center h-100">
+                  <div class="w-auto rounded-circle bg-warning p-3"><i class="text-white" data-feather="award"></i></div>
+                </div>
+              </div>
+              <div class="col-7 bg-errorc">
+                <div class="text-right">
+                  <p class="card-category">Reputation</p>
+                  <h3 class="card-title mb-0">{{total_reputation}}</h3>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer pt-0">
+            <hr>
+            <div class="stats">
+              <!-- <i class="tim-icons icon-refresh-01"></i>  -->
+              View <a href="/panel/back/user">Reputations</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-3 col-md-6">
+        <div class="card card-stats">
+          <div class="card-body pb-0">
+            <div class="row">
+              <div class="col-5 bg-warningc align-items-center">
+                <div class="d-flex align-items-center h-100">
+                  <div class="w-auto rounded-circle bg-info p-3"><i class="text-white" data-feather="layers"></i></div>
+                </div>
+              </div>
+              <div class="col-7 bg-errorc">
+                <div class="text-right">
+                  <p class="card-category">Programs</p>
+                  <h3 class="card-title mb-0">{% firstof program_count 76 %}</h3>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer pt-0">
+            <hr>
+            <div class="stats">
+              Go to <a href="/panel/main/program">Programs</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-3 col-md-6">
+        <div class="card card-stats">
+          <div class="card-body pb-0">
+            <div class="row">
+              <div class="col-5 bg-warningc align-items-center">
+                <div class="d-flex align-items-center h-100">
+                  <div class="w-auto rounded-circle bg-success p-3"><i class="text-white" data-feather="users"></i></div>
+                </div>
+              </div>
+              <div class="col-7 bg-errorc">
+                <div class="text-right">
+                  <p class="card-category">Users</p>
+                  <h3 class="card-title mb-0">{{users_count}}</h3>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer pt-0">
+            <hr>
+            <div class="stats">
+              <!-- <i class="tim-icons icon-refresh-01"></i>  -->
+              Go to <a href="/panel/back/user">Users</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-3 col-md-6">
+        <div class="card card-stats">
+          <div class="card-body pb-0">
+            <div class="row">
+              <div class="col-5 bg-warningc align-items-center">
+                <div class="d-flex align-items-center h-100">
+                  <div class="w-auto rounded-circle bg-error p-3"><i class="text-white" data-feather="flag"></i></div>
+                </div>
+              </div>
+              <div class="col-7 bg-errorc">
+                <div class="text-right">
+                  <p class="card-category">Reports</p>
+                  <h3 class="card-title mb-0">{% firstof report_count 42 %}</h3>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer pt-0">
+            <hr>
+            <div class="stats">
+              <!-- <i class="tim-icons icon-refresh-01"></i>  -->
+              Go to <a href="/panel/main/report">Reports</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+
+
+
+
+
+
+
+
+    {% for app in app_list %}
+          {% for model in app.models %}
+    <div class="col-lg-3">
+      <div class="app-{{ app.app_label }} module{% if app.app_url in request.path|urlencode %} current-app{% endif %} card">
+          <div class="card-header">
+              <div class="card-category">
+                <a href="{{ app.app_url }}" class="section text-light" title="{% blocktranslate with name=app.name %}Models in the {{ name }} application{% endblocktranslate %}">{{ app.name }}</a>
+              </div>
+          </div>
+          <div class="card-body">
+            <div class="row">
+                <div class="col">
+                    {% if model.admin_url %}
+                    <h3 class="mb-0">
+                        <a href="{{ model.admin_url }}"{% if model.admin_url in request.path|urlencode %} aria-current="page"{% endif %} class="text-main">{{ model.name }}</a>
+                    </h3>
+                    {% else %}
+                        <p >{{ model.name }}</p>
+                    {% endif %}
+                </div>
+                <div class="col-auto">
+                    <div>
+                    {% if model.add_url %}
+                        <a href="{{ model.add_url }}" title="Add {{ model.name }}" rel="tooltip" class="addlink btn-sm btn-success"><i class="plus feather-small" data-feather="plus"></i></a>
+                    {% else %}
+                        <span></span>
+                    {% endif %}
+
+
+                    {% if model.admin_url and show_changelinks %}
+                        {% if model.view_only %}
+                        <a href="{{ model.admin_url }}" rel="tooltip" title="View {{model.name}}" class="viewlink btn btn-sm btn-info"><i class="eye feather-small" data-feather="eye"></i></a>
+                        {% else %}
+                        <a href="{{ model.admin_url }}" rel="tooltip" title="Change {{model.name}}" class="changelink btn btn-sm btn-warning"><i class="pen feather-small" data-feather="edit-2"></i></a>
+                        {% endif %}
+                    {% else %}
+                      
+                        <a href="{{ model.admin_url }}" rel="tooltip" title="View {{model.name}}" class="viewlink btn btn-sm btn-info" {% if not model.admin_url %}disabled{% endif %}><i class="eye feather-small" data-feather="eye"></i></a>
+                        <!-- <a href="{{ model.admin_url }}" rel="tooltip" title="Change {{model.name}}" {% if not model.admin_url %}disabled{% endif %} class="changelink btn btn-sm btn-warning"><i class="pen feather-small" data-feather="edit-2"></i></a> -->
+                        
+                    {% endif %}
+                    </div>
+                </div>
+            </div>
+          </div>
+      </div>
+        
+    </div>
+          {% endfor %}
+    {% endfor %}
+    </div>
+  {% else %}
+    <p>{% translate 'You don’t have permission to view or edit anything.' %}</p>
+  {% endif %}
+</div>
+{% endblock %}
+
+{% block sidebar %}
+
+
+
+
+
+
+
+
+
+<div id="content-related" class="row">
+
+
+
+
+
+
+
+
+
+
+  {% if request.user.is_admin %}
+    <div class="col-sm-8">
+        <div class="card card-chart">
+          <div class="card-header ">
+            <div class="row">
+              <div class="col-sm-6 text-left">
+                <h5 class="card-category">New</h5>
+                <h2 class="card-title">Users</h2>
+              </div>
+              <div class="col-sm-6 d-none">
+                <div class="btn-group btn-group-toggle float-right" data-toggle="buttons">
+                  <label class="btn btn-sm btn-primary btn-simple active" id="0">
+                    <input type="radio" name="options" checked>
+                    <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Accounts</span>
+                    <span class="d-block d-sm-none">
+                      <i class="tim-icons icon-single-02"></i>
+                    </span>
+                  </label>
+                  <label class="btn btn-sm btn-primary btn-simple" id="1">
+                    <input type="radio" class="d-none d-sm-none" name="options">
+                    <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Purchases</span>
+                    <span class="d-block d-sm-none">
+                      <i class="tim-icons icon-gift-2"></i>
+                    </span>
+                  </label>
+                  <label class="btn btn-sm btn-primary btn-simple" id="2">
+                    <input type="radio" class="d-none" name="options">
+                    <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Sessions</span>
+                    <span class="d-block d-sm-none">
+                      <i class="tim-icons icon-tap-02"></i>
+                    </span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="chart-area">
+              <canvas id="newUsers"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      
+
+                  <div class="col-sm-4">
+                    <div class="card">
+                        <div class="card-header">
+                          <div class="row">
+                            <div class="col-6 text-left">
+                              <h5 class="card-category">New</h5>
+                              <h2 class="card-title">Users</h2>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="card-body">
+                          <div class="table-responsive overflow-hidden">
+                              <table class="table tablesorter " id="">
+                              <thead class=" text-primary">
+                                  <tr>
+                                      <th scope="col">Username</th>
+                                      <th>Type</th>
+                                      <th class="text-centerc">Joined</th>
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                {% for user in new_users_all %}
+                                <tr>
+                                    <th scope="col"><a href="/panel/back/user/{{user.id}}/change">{{user.username}}</a></th>
+                                    <th>{{user.get_type_display}}</th>
+                                    <th class="text-centerc">{{user.date_joined | timesince}}</th>
+                                </tr>
+                                {% endfor %}
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+
+
+{%endif%}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      
+
+<div class="col-lg-4">
+  <div class="card">
+      <div class="card-header">
+        <div class="row">
+          <div class="col-6 text-left">
+            <h5 class="card-category">Users</h5>
+            <h2 class="card-title">By Reputation</h2>
+          </div>
+          <div class="col-6 text-right ">
+            <div class="p-3 pr-2">
+              <a href="/panel/back/user" rel="tooltip" title="View All"><i data-feather="external-link" style="width: 20px;height: 20px;"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive overflow-hidden">
+            <table class="table tablesorter " id="">
+            <thead class=" text-primary">
+                <tr>
+                    <th scope="col">Username</th>
+                    <th>Type</th>
+                    <th class="text-centerc">Reputation</th>
+                </tr>
+            </thead>
+            <tbody>
+              {% for user in rep_users %}
+              <tr>
+                  <th scope="col"><a href="/panel/back/user/{{user.id}}/change">{{user.username}}</a></th>
+                  <th>{{user.get_type_display}}</th>
+                  <th class="text-centerc">{{user.totalreputation}}</th>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+  </div>
+</div>
+
+      
+
+<div class="col-lg-4">
+  <div class="card card-chart">
+      <div class="card-header">
+        <div class="row">
+          <div class="col-6 text-left">
+            <h5 class="card-category">Overview</h5>
+            <h2 class="card-title">Profile</h2>
+          </div>
+          <div class="col-6 text-right ">
+            <div class="p-3 pr-2">
+              <a href="/panel/profile" rel="tooltip" title="Edit Profile"><i data-feather="edit-2" style="width: 20px;height: 20px;"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="profile-view ">
+          <img src="{%if request.user.photo%}/media/{{request.user.photo}}{%else%}https://ui-avatars.com/api/?background=000&name={{request.user.username}}&color=fff{%endif%}" 
+          alt="{{request.user.username}}" class="mb-3">
+          <h4 class="mb-2">{{request.user.username}}</h4>
+          
+            <hr class="w-75">
+          <p class="mt-1">{{request.user.email}}</p>
+          <p class="mt-1">{{request.user.get_type_display}}</p>
+        </div>
+      </div>
+  </div>
+</div>
+
+      
+
+<div class="col-lg-4">
+  <div class="card card-chart">
+      <div class="card-header">
+        <div class="row">
+          <div class="col-6 text-left">
+            <h5 class="card-category">Your</h5>
+            <h2 class="card-title">Activity</h2>
+          </div>
+          <div class="col-6 text-right ">
+            <div class="p-3 pr-2">
+              <a href="{% url 'admin:password_change' %}" rel="tooltip" title="Change Password"><i data-feather="edit" style="width: 20px;height: 20px;"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive overflow-hidden">
+            <table class="table tablesorter " id="">
+            <thead class=" text-primary">
+                <tr>
+                    <th scope="col">Action</th>
+                    <th>Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% load log %}
+
+                {% get_admin_log 5 as admin_log for_user user %}
+
+                {% if not admin_log %}
+                    <tr>
+                        <td colspan="4" class="text-center">{% translate 'None Available' %}</td>
+                    </tr>
+                {% else %}
+                    {% for entry in admin_log %}
+                    <tr>
+                        {% if entry.is_deletion or not entry.get_admin_url %}
+                            <th class="mini quietc" scope="row">{{ entry.object_repr }}</th>
+                        {% else %}
+                            <th class="mini quietc" scope="row"><a href="{{ entry.get_admin_url }}">{{ entry.object_repr }}</a></th>
+                        {% endif %}
+
+                        <td >
+                            <div class="rounded-circle" title="{% if entry.is_addition %}Added {% elif entry.is_deletion %}Deleted {% else %}Edited {%endif%}{{ entry.content_type.name | capfirst }}" data-toggle="tooltip" data-placement="top">
+                              <i class="ni text-lg ni-{% if entry.is_addition %}fat-add text-success{% elif entry.is_deletion %}fat-remove text-error{% else %}fat-delete text-warning {%endif%}
+                              " ></i>
+                              {% if entry.content_type %}
+                                {% if entry.is_addition %}Added {% elif entry.is_deletion %}Deleted {% else %}Edited {%endif%}<a href="{{ entry.content_type.name }}" title="Go to {{ entry.content_type.name | capfirst }} Section">
+                                    {{ entry.content_type.name | capfirst }}
+                                </a>
+                              {% else %}
+                                <p>{% if entry.is_addition %}Added {% elif entry.is_deletion %}Deleted {% else %}Edited {%endif%}Unknown
+                              {% endif %}
+                            </div>
+                        </td>
+
+                    </tr>
+                    {% endfor %}
+                {%endif%}
+            </tbody>
+            </table>
+        </div>
+      </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="col-lg-6">
+    <div class="card card-chart">
+        <div class="card-header">
+        <h5 class="card-category">Overview</h5>
+        <h3 class="card-title">Programs</h3>
+        </div>
+        <div class="card-body">
+        <div class="chart-area">
+            <canvas id="newPrograms" class="d-nonec"></canvas>
+        </div>
+        </div>
+    </div>
+</div>
+    
+<div class="col-lg-6">
+    <div class="card ">
+        <div class="card-header">
+            <h5 class="card-category">{% if request.user.is_superadmin %}Universal{%else%}Personal{%endif%}</h5>
+        <h3 class="card-title">{% translate 'Recent actions' %}</h3>
+        </div>
+        <div class="card-body">
+        <div class="table-responsive overflow-hidden">
+            <table class="table tablesorter " id="">
+            <thead class=" text-primary">
+                <tr>
+                    <th scope="col">Action</th>
+                    <th>Type</th>
+                    {% if request.user.is_superadmin %}<th class="text-centerc">User</th>{%endif%}
+                </tr>
+            </thead>
+            <tbody>
+                {% load log %}
+
+                {% if request.user.is_superadmin %}
+                    {% get_admin_log 10 as admin_log %}
+                {% else %}
+                    {% get_admin_log 10 as admin_log for_user user %}
+                {% endif %}
+
+                {% if not admin_log %}
+                    <tr>
+                        <td colspan="4" class="text-center">{% translate 'None Available' %}</td>
+                    </tr>
+                {% else %}
+                    {% for entry in admin_log %}
+                    <tr>
+                        {% if entry.is_deletion or not entry.get_admin_url %}
+                            <th class="mini quietc" scope="row">{{ entry.object_repr }}</th>
+                        {% else %}
+                            <th class="mini quietc" scope="row"><a href="{{ entry.get_admin_url }}">{{ entry.object_repr }}</a></th>
+                        {% endif %}
+
+                        <td >
+                            <div class="rounded-circle" title="{% if entry.is_addition %}Added {% elif entry.is_deletion %}Deleted {% else %}Edited {%endif%}{{ entry.content_type.name | capfirst }}" data-toggle="tooltip" data-placement="top">
+                              <i class="ni text-lg ni-{% if entry.is_addition %}fat-add text-success{% elif entry.is_deletion %}fat-remove text-error{% else %}fat-delete text-warning {%endif%}
+                              " ></i>
+                              {% if entry.content_type %}
+                                {% if entry.is_addition %}Added {% elif entry.is_deletion %}Deleted {% else %}Edited {%endif%}<a href="{{ entry.content_type.name }}" title="Go to {{ entry.content_type.name | capfirst }} Section">
+                                    {{ entry.content_type.name | capfirst }}
+                                </a>
+                              {% else %}
+                                <p>{% if entry.is_addition %}Added {% elif entry.is_deletion %}Deleted {% else %}Edited {%endif%}Unknown
+                              {% endif %}
+                            </div>
+                        </td>
+
+                        {% if request.user.is_superadmin %}
+                        <td>
+                            {%if request.user.id == entry.user.id %}
+                                <a href="/panel/profile">You</a>
+                            {%else%}
+                                <a href="/panel/back/user/{{entry.user.id}}/change">{% if entry.user.name %}{{entry.user.name}}{% else %}{{entry.user.username}}{% endif %}</a>
+                            {%endif%}
+                        </td>
+                        {%endif%}
+                    </tr>
+                    {% endfor %}
+                {%endif%}
+            </tbody>
+            </table>
+        </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+    <div class="module d-none" id="recent-actions-module">
+        <h3>{% translate 'My actions' %}</h3>
+            {% load log %}
+            {% get_admin_log 10 as admin_log for_user user %}
+            {% if not admin_log %}
+            <p>{% translate 'None available' %}</p>
+            {% else %}
+            <ul class="actionlist">
+            {% for entry in admin_log %}
+            <li class="{% if entry.is_addition %}addlink{% endif %}{% if entry.is_change %}changelink{% endif %}{% if entry.is_deletion %}deletelink{% endif %}">
+                {% if entry.is_deletion or not entry.get_admin_url %}
+                    {{ entry.object_repr }}
+                {% else %}
+                    <a href="{{ entry.get_admin_url }}">{{ entry.object_repr }}</a>
+                {% endif %}
+                <br>
+                {% if entry.content_type %}
+                    <span class="mini quiet">{% filter capfirst %}{{ entry.content_type.name }}{% endfilter %}</span>
+                {% else %}
+                    <span class="mini quiet">{% translate 'Unknown content' %}</span>
+                {% endif %}
+            </li>
+            {% endfor %}
+            </ul>
+            {% endif %}
+    </div>
+
+
+
+
+
+
+    
+</div>
+
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+{% block javascripts %}
+<script src="/static/admin/js/plugins/chartjs.min.js"></script>
+<script defer src="/static/admin/js/plugins/moment.js"></script>
+<script defer src="/static/admin/js/chart.js?v=1.0.0"></script>
+<script>
+  const newusers = {{ newusers | safe }};
+  const newprograms = {{ newprograms | safe }};
+</script>
+
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+
+
+<span style="display: none;">
+  {% block title %}Send Email {{block.super}}{% endblock %}</span>
+
+<form action="{{link}}" method="post">
+  {% csrf_token %}
+<p>
+Sending Email to {{users|length}} Users
+</p>  
+
+  <input type="text" name="subject" placeholder="Subject of Message" class="form-control" required />
+  <br>
+  <input type="text" name="title" placeholder="Title of Message" class="form-control" required />
+  <br>
+  <textarea name="message" id="message" placeholder="Message" class="form-control" required cols="30" rows="10"></textarea>
+  <br>
+  <input type="submit" name="sending" class="btn btn-info" value="Send"/>
+</form>
+{% endblock %}

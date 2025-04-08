@@ -1,0 +1,66 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls static admin_list card_list %}
+
+
+{% block title %}Make Staff
+{{ block.super }}
+{% endblock %}
+
+{% block extrahead %}
+{{ block.super }}
+{{ media.js }}
+{% endblock %}
+
+{% block bodyclass %}{{ block.super }} app-{{ opts.app_label }} model-{{ opts.model_name }} change-list{% endblock %}
+
+{% if not is_popup %}
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'admin:index' %}">{% translate 'Home' %}</a>
+&rsaquo; <a href="{% url 'admin:app_list' app_label=cl.opts.app_label %}">{{ cl.opts.app_config.verbose_name }}</a>
+&rsaquo; {{ cl.opts.verbose_name_plural|capfirst }}
+</div>
+{% endblock %}
+{% endif %}
+
+{% block coltype %}{% endblock %}
+
+{% block content_title %}
+<h1>Make Staff</h1>{% endblock %}
+
+{% block content %}
+  <div id="content-main">
+      <div class="card">
+          <div class="card-body">
+              <form method="post" class="row" action="{% if link %}{{link}}{% endif %}" enctype="multipart/form-data">
+                  {% csrf_token %}
+                  
+
+                <div class="col-md-6 mt-1" id="users-auto">
+                    <label for="recipients" >Attached To*</label>
+                    <select id="recipients" class="form-controlc form-control-alternativec p-0" name="company" required style="display: none;">
+                        <option value=""> ---- </option>
+                        {% for user in users %}
+                        <option value="{{user.id}}"> {% if user.name %} {{user.name}} {% else %} {{user.username}} {% endif %} ({{user.email}}) </option>
+                        {%endfor%}
+                    </select>
+                    <br>
+                </div>
+                
+                <div class="col-md-12">
+                    <button type="submit" class="btn btn-info">Go</button>
+                </div>
+              </form>
+          </div>
+      </div>
+  </div>
+{% endblock %}
+{% block javascripts %}
+
+<script>
+        
+    var $select = $('#recipients').selectize({placeholder: 'Select Company', })
+
+
+</script>
+{% endblock %}

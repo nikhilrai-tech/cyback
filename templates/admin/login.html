@@ -1,0 +1,116 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "admin/css/login.css" %}">
+{{ form.media }}
+{% endblock %}
+
+
+{% block usertools %}{% endblock %}
+
+{% block nav-global %}{% endblock %}
+
+{% block nav-sidebar %}{% endblock %}
+
+{% block content_title %}{% endblock %}
+
+{% block breadcrumbs %}{% endblock %}
+
+{% block content %}
+{% if form.errors and not form.non_field_errors %}
+<div class="alert error alert-active">
+  <p class="errornote">
+  {% if form.errors.items|length == 1 %}{% translate "Please correct the error below." %}{% else %}{% translate "Please correct the errors below." %}{% endif %}
+  </p>
+</div>
+{% endif %}
+
+{% if form.non_field_errors %}
+{% for error in form.non_field_errors %}
+<div class="alert error alert-active">
+<p class="errornote">
+    Please enter correct Username or Password for an Admin Account
+</p>
+</div>
+{% endfor %}
+{% endif %}
+
+<div id="content-main" class="d-flex justify-content-center">
+
+{% if user.is_authenticated %}
+<div class="alert error alert-active">
+<p class="errornote">
+{% blocktranslate trimmed %}
+    You are authenticated as {{ username }}, but are not authorized to
+    access this page. Would you like to login to a different account?
+{% endblocktranslate %}
+</p>
+</div>
+{% endif %}
+
+<form action="{{ app_path }}" method="post" class="d-inline-block p-2c card w-auto" id="login-form">
+  {% csrf_token %}
+  <div class="card-header justify-content-center">
+    <h4 class="card-title">
+      Login
+    </h4>
+  </div>
+  <div class="card-body">
+    <div class="form-group d-flex flex-column">
+      {{ form.username.errors }}
+      {{ form.username.label_tag }} 
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text pl-3"><i data-feather="user" class="feather-small"></i></span>
+        </div>
+        <input type="text" name="username" id="id_username" value="{%if form.username.value %}{{form.username.value}}{%endif%}" class="form-control">
+      </div>
+    </div>
+    <div class="form-group d-flex flex-column">
+      {{ form.password.errors }}
+      {{ form.password.label_tag }} 
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text pl-3"><i data-feather="key" class="feather-small"></i></span>
+        </div>
+        <input type="password" name="password" id="id_password" value="{%if form.password.value %}{{form.password.value}}{%endif%}" class="form-control" />
+        <div class="input-group-append">
+          <span id="show-pass" class="input-group-text bg-transparent pl-2 ">
+            <i data-feather="eye-off" class="feather-small  point"></i>
+          </span>
+        </div>
+
+      </div>
+      <input type="hidden" name="next" value="{{ next }}">
+    </div>
+    {% url 'admin_password_reset' as password_reset_url %}
+    {% if password_reset_url %}
+    <div class="password-reset-link">
+      <a href="{{ password_reset_url }}">{% translate 'Forgotten your password or username?' %}</a>
+    </div>
+    {% endif %}
+    <div class="submit-row my-2 d-flex justify-content-center">
+      <input type="submit" class="btn btn-success" value="{% translate 'Log in' %}">
+    </div>
+    
+  </div>
+</form>
+
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+  var icon = document.getElementById('show-pass');
+  var input = document.getElementById('id_password');
+  icon.addEventListener('click',(e)=>{
+    var newicon = feather.icons[input.type === 'password' ? 'eye' : 'eye-off']
+    newicon.attrs.width = 16
+    newicon.attrs.height = 16
+    newicon.attrs.class += ' point'
+    icon.innerHTML = newicon.toSvg()
+    // icon.classList.replace(input.type === 'password' ? 'fa-eye-slash' : 'fa-eye',input.type === 'password' ? 'fa-eye': 'fa-eye-slash')
+    input.type = input.type === 'password' ? 'text' : 'password'
+  })
+</script>
+{% endblock %}

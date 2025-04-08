@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Billa Official</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <meta name="description" content="Official Website of Billa owned and managed by Vivek Billa" />
+    <meta name="keywords" content="Vivek Billa, Billa, billa.com, billa.in, Kumar Billa">
+    <meta name="author" content="Vivek Billa">
+    <meta name='url' content='https://billaa.in'>
+    <style>
+        body{background-color:#2d3436;background-image:linear-gradient(135deg,#2d3436 0%,#000000 74%);color:#fff;height:100vh}
+        html,body{margin:0}*{font-family:Open Sans,sans-serif}.main{width:100%;height:100%;display:flex;justify-content:center;align-items:center;flex-direction:column}
+        h1{font-weight:300;font-size:4rem}.loading{background-color:#88f6fe;border-radius:50rem;height:40px;width:80px;border:5px solid #49767766;box-sizing:content-box;position:relative}.load{background-color:#fff;height:40px;width:40px;border-radius:20px;margin-left:0;animation:loading 1000ms ease-in infinite}@keyframes loading{0%{margin-left:0}50%{margin-left:40px}100%{margin-left:0}}.line{height:1px;width:150px;margin-top:150px;background:#ffffffba}.contact{display:flex;flex-direction:column;padding:10px;justify-content:space-between;align-items:center}.contact input,textarea{margin-top:10px;background-color:transparent;color:#ffffffba;border-radius:2px;border:1px solid #ffffffba;padding:9px 11px;transition:all 500ms ease;box-sizing:border-box}.contact input:focus,.contact textarea:focus{border-top-left-radius:12px;border-top-right-radius:0;border-bottom-right-radius:12px;border-bottom-left-radius:0}.contact textarea{width:250px;max-width:250px;min-width:50px}.contact input[type="button"]:hover{margin-top:10px;background-color:#f5f5f5;color:#000;border-top-left-radius:12px;border-top-right-radius:0;border-bottom-right-radius:12px;border-bottom-left-radius:0;border:1px solid #88f6fe}.contact input[type="button"]:disabled{opacity:.4}.contact input[type="button"]:disabled:hover{background-color:transparent;color:#ffffffba;border:1px solid #ffffffba}
+    </style>
+</head>
+<body>
+    <div class="main">
+        <h1 >Billa</h1>
+        <p>Coming Soon
+            <span class="dot-1 dot">.</span>
+            <span class="dot-2 dot">.</span>
+            <span class="dot-3 dot">.</span>
+        </p>
+        <div class="loading">
+            <div class="load">
+
+            </div>
+        </div>
+        <div class="line"></div>
+        <div class="contact">
+            <!-- <p>Contact the Owner</p> -->
+            <input type="text" name="Name" placeholder="Your Name" id="name">
+            <textarea name="contact" placeholder="Send a Message to the Owner (Vivek Billa)" id="message"></textarea>
+            <input type="button" id="send" value="Send">
+        </div>
+    </div>
+    <script>/* SmtpJS.com - v3.0.0 */
+        var Email = { send: function (a) { return new Promise(function (n, e) { a.nocache = Math.floor(1e6 * Math.random() + 1), a.Action = "Send"; var t = JSON.stringify(a); 
+        Email.ajaxPost("https://smtpjs.com/v3/smtpjs.aspx?", t, function (e) { n(e) }) }) }, ajaxPost: function (e, n, t) { var a = Email.createCORSRequest("POST", e); 
+        a.setRequestHeader("Content-type", "application/x-www-form-urlencoded"), a.onload = function () { var e = a.responseText; null != t && t(e) }, a.send(n) }, 
+        ajax: function (e, n) { var t = Email.createCORSRequest("GET", e); t.onload = function () { var e = t.responseText; null != n && n(e) }, t.send() }, 
+        createCORSRequest: function (e, n) { var t = new XMLHttpRequest; return "withCredentials" in t ? t.open(e, n, !0) : "undefined" != typeof XDomainRequest ? 
+        (t = new XDomainRequest).open(e, n) : t = null, t } };
+        document.getElementById("send").addEventListener("click",e=>{var a=document.getElementById("name"),t=document.getElementById("message");e.target.value="Sending....",e.target.disabled=!0,
+        Email.send({Host:"mail.billaa.in",Username:"notifications@billaa.in",Password:"Notifications@123",To:"vivekbilla345@gmail.com",From:"notifications@billaa.in",Subject:"New Contact",
+        FromName:"Billa",Body:"New Contact From "+a.value+", saying "+t.value}).then(n=>{"OK"==n?(e.target.value="Sent",a.value="",t.value=""):(e.target.value="Something went wrong",e.target.disabled=!1)})});
+    </script>
+</body>
+</html>

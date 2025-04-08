@@ -1,0 +1,242 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls static admin_list card_list %}
+
+
+{% block title %}Send Email
+{{ block.super }}
+{% endblock %}
+
+{% block extrahead %}
+{{ block.super }}
+{{ media.js }}
+{% endblock %}
+
+{% block bodyclass %}{{ block.super }} app-{{ opts.app_label }} model-{{ opts.model_name }} change-list{% endblock %}
+
+{% if not is_popup %}
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'admin:index' %}">{% translate 'Home' %}</a>
+&rsaquo; <a href="{% url 'admin:app_list' app_label=cl.opts.app_label %}">{{ cl.opts.app_config.verbose_name }}</a>
+&rsaquo; {{ cl.opts.verbose_name_plural|capfirst }}
+</div>
+{% endblock %}
+{% endif %}
+
+{% block coltype %}{% endblock %}
+
+{% block content_title %}
+<h1>Send Email</h1>{% endblock %}
+
+{% block content %}
+  <div id="content-main">
+      <div class="card">
+          <div class="card-body">
+              <form method="post" class="row" action="{% if link %}{{link}}{% endif %}" enctype="multipart/form-data">
+                  {% csrf_token %}
+                  {% if custom %}
+                  <input type="text" value="yoi" name="sending" style="display: none;">
+                  <select id="recipients" class="form-controlc form-control-alternativec p-0" multiple name="users" style="display: none;">
+                      {% for user in users %}
+                      <option value="{{user.id}}" selected> {{user.username}} </option>
+                      {%endfor%}
+                  </select>
+                  {% else %}
+                <div class="col-md-12 mt-2">
+                    <label for="recipients" class="mb-1" >Recipients*</label>
+                    <button type="button" id="select-all" class="btn btn-sm btn-success btn-simple">Select All</button>
+                    <button type="button" id="select-none" class="btn btn-sm btn-error btn-simple">Select None</button>
+                    <p class="d-inline-block ml-2"><span id="selected">0 Users</span>, <span id="selected2">0 Companies</span> selected</p>
+                </div>
+                <div class="col-md-6 mt-1" id="users-auto">
+                    <label for="recipients" >Users*</label>
+                    <select id="recipients" class="form-controlc form-control-alternativec p-0" multiple name="users" required style="display: none;">
+                        {% for user in users %}
+                        <option value="{{user.0}}">{% if user.1 %} {{user.1}} {% else %} {{user.3}} {% endif %} ({{user.2}})</option>
+                        {%endfor%}
+                    </select>
+                    <br>
+                </div>
+                <div class="col-md-6" id="comp-auto">
+                    <label for="recipients2" >Companies</label>
+                    <select id="recipients2" class="form-controlc form-control-alternativec p-0" multiple name="comps" style="display: none;">
+                        {% for user in companies %}
+                        <option value="{{user.0}}">{% if user.1 %} {{user.1}} {% else %} {{user.3}} {% endif %} ({{user.2}})</option>
+                        {%endfor%}
+                    </select>
+                    <br>
+                </div>
+                {% endif %}
+                <div class="col-md-6">
+                    <label for="subject" >Subject*</label>
+                    <input type="text" name="subject" placeholder="Subject of Email" id="subject" class="form-control" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="title" >Title*</label>
+                    <input type="text" name="title" placeholder="Title inside Body" id="title" class="form-control" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="content" >Content*</label>
+                    <textarea name="content" placeholder="Content inside Body" id="content" class="form-control" required></textarea>
+                </div>
+                <br>
+                <div class="col-md-6">
+                    <label for="remark" >Remark</label>
+                    <input type="text" name="remark" placeholder="Remark if any" id="remark" class="form-control">
+                </div>
+                <div class="col-md-12 d-flex mb-3">
+                    <div class="d-block w-100c mr-3"><label>Select Template</label></div><br>
+                    <input type="radio" id="email/send.html" name="template" value="email/send.html" required>
+                    <label for="email/send.html" class="mr-3">
+                        <img src="/static/admin/img/email/template-1.jpeg" style="object-fit: cover;" height="200" width="200" alt="Template 1">
+                    </label>
+                    <!-- <input type="radio" id="email/descmain.html" name="template" value="email/descmain.html">
+                    <label for="email/descmain.html" class="mr-3">
+                        <img src="/static/admin/img/email/template-2.jpeg" style="object-fit: cover;" height="200" width="200" alt="Template 2">
+                    </label> -->
+                </div>
+                <div class="col-md-12 mb-3">
+                    <label for="linkname">Add Link</label>
+                    <br>
+                    <input type="text" name="linkname" placeholder="Link Name" title="Link Name" rel="tooltip" id="linkname" value="Go to App" class="form-control w-auto d-inline-block" required>
+                    <input type="text" name="linktarget" placeholder="Link Action" id="linktarget" title="Link Action" rel="tooltip" value="https://cyber3ra.com" class="form-control w-auto d-inline-block" required>
+                </div>
+                <div class="col-md-4">
+                    <label for="files">Attach Files</label>
+                    <input type="button" class="form-control d-inline-block text-left" id="file-button" onclick="document.getElementById('file').click()" value="Attach Files">
+                    <input type="file" name="files" class="d-none" id="file" multiple >
+                </div>
+                <div class="col-md-12">
+                    <button type="submit" class="btn btn-info">Send</button>
+                </div>
+              </form>
+          </div>
+      </div>
+  </div>
+{% endblock %}
+{% block javascripts %}
+{% if not custom %}
+<script>
+    const selectAll = document.getElementById('select-all')
+    const selectNone = document.getElementById('select-none')
+    selectNone.disabled = true
+        
+    var $select = $('#recipients').selectize({placeholder: 'Select Users',
+    onChange: (val) => {
+        if(val.length > 0){
+            selectNone.disabled = false
+        }
+        if(val.length > 6){
+            if($('#users-auto .selectize-input.items').has('.remaining').length){
+                $('#users-auto .remaining').html('+'+(val.length -6))
+            }
+            else{
+                $('#users-auto .selectize-input.items').append('<span class="remaining">+'+(val.length -6)+'</span>')
+            }
+            
+        }
+        else{
+            if($('#users-auto .selectize-input.items').has('.remaining').length){
+                $('#users-auto .remaining').html('')
+            }
+            else{
+                $('#users-auto .selectize-input.items').append('<span class="remaining"></span>')
+            }
+            
+        }
+        $('#selected').html(val.length == 1 ? '1 User' : val.length+ ' Users')
+    },render: { item: (item, escape) => { return '<div data-type="user" class="item">'+item.text+ '<i data-feather="x" ></i></div>'; } },})
+
+    var $select2 = $('#recipients2').selectize({placeholder: 'Select Companies',
+    onChange: (val) => {
+        if(val.length > 0){
+            selectNone.disabled = false
+        }
+        console.log(val.length)
+        if(val.length > 6){
+            if($('#comp-auto .selectize-input.items').has('.remaining2').length){
+                $('#comp-auto .remaining2').html('+'+(val.length -6))
+            }
+            else{
+                $('#comp-auto .selectize-input.items').append('<span class="remaining2">+'+(val.length -6)+'</span>')
+            }
+            
+        }
+        else{
+            console.log('here')
+            if($('#comp-auto .selectize-input.items').has('.remaining2').length){
+                $('#comp-auto .remaining2').html('')
+            }
+            else{
+                $('#comp-auto .selectize-input.items').append('<span class="remaining2"></span>')
+            }
+            
+        }
+        $('#selected2').html(val.length == 1 ? '1 Company' : val.length+' Companies')
+    },render: { item: (item, escape) => { return '<div data-type="comp" class="item">'+item.text+ '<i data-feather="x" ></i></div>'; } },})
+    
+    var recis = $select[0].selectize
+    var recis2 = $select2[0].selectize
+
+    const remaining = (val,id) => {
+
+    }
+
+    $(document).on('click', 'div.selectize-input div.item', function (e) {
+        // console.log($(this).attr("data-type"))
+        
+        // console.log(buyerControl.getValue())
+        switch ($(this).attr("data-type")) {
+            case "user":
+                recis.removeItem($(this).attr("data-value"))
+                recis.refreshOptions()
+                break;
+            case "comp":
+                recis2.removeItem($(this).attr("data-value"))
+                recis2.refreshOptions()
+                break;
+        
+            default:
+                break;
+        }
+        if (recis.getValue().length < 1){
+            // console.log('empty')
+            $("#recipients-selectized").css({"position": "relative", "opacity": "1", "left": "0px"});
+            $(".selectize-dropdown").css({"top": "36px"})
+        }
+        if (recis2.getValue().length < 1){
+            // console.log('empty')
+            $("#recipients2-selectized").css({"position": "relative", "opacity": "1", "left": "0px"});
+            $(".selectize-dropdown").css({"top": "36px"})
+        }
+    });
+
+    
+    selectAll.addEventListener('click',(e)=>{
+        selectAll.disabled = true
+        selectNone.disabled = false
+        // console.log(recis.getValue())
+        // recis.setValue(recis.options)
+        for(rec in recis.options) {
+            recis.addItem(rec)
+        }
+    })
+
+    selectNone.addEventListener('click',(e)=>{
+        selectAll.disabled = false
+        selectNone.disabled = true
+        recis.clear()
+    })
+
+</script>
+{%endif%}
+<script>
+document.getElementById('file').addEventListener('change',(e)=>{
+    var string =''
+    for (var i=0;i<e.target.files.length;i++){
+        string += e.target.files[i].name +', '
+    }
+    document.getElementById('file-button').value = string
+})
+</script>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% load i18n card_list %}
+
+{% if app_list %}
+  {% for app in app_list %}
+        {% for model in app.models %}
+          {% if model.admin_url and not model.name == 'Scopes' %}
+          <li class="{% ifequal model.admin_url request.path %} active {% endifequal %}">
+            <a href="{{ model.admin_url }}"{% if model.admin_url in request.path|urlencode %} aria-current="page"{% endif %} title="{{request.path}}">
+              <i data-feather="{% get_icon model.name %}" class="mr-2 nav-icon {% get_icon model.name %}"></i> {{ model.name }}
+            </a>
+          </li>
+          {% endif %}
+        {% endfor %}
+  {% endfor %}
+{% else %}
+  <li class="">
+    <a href="/panel/back/user" title="Users">
+      <i data-feather="user" class="mr-2 nav-icon"></i> Users
+    </a>
+  </li>
+  <li class="">
+    <a href="/panel/main/program" title="Programs">
+      <i data-feather="box" class="mr-2 nav-icon"></i> Programs
+    </a>
+  </li>
+{% endif %}
+
+

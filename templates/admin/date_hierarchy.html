@@ -1,0 +1,18 @@
+{% if show %}
+<div class="xfull cardc col-md-4c">
+
+        <h4 class="card-title mt-2 mb-1">Date Hierarchy </h4>
+<ul class="toplinks pl-0 d-flex mb-0 flex-wrap" style="list-style-type: none;">
+{% block date-hierarchy-toplinks %}
+{% block date-hierarchy-back %}
+{% if back %}<li class="date-back"><a href="{{ back.link }}" class="btn btn-sm">&lsaquo; {{ back.title }}</a></li>{% endif %}
+{% endblock %}
+{% block date-hierarchy-choices %}
+{% for choice in choices %}
+<li> <a class="btn btn-sm btn-neutral " {% if not choice.link %}disabled{%endif%} href="{% if choice.link %}{{ choice.link }}{% else %}#{% endif %}">{{ choice.title }}</a></li>
+{% endfor %}
+{% endblock %}
+{% endblock %}
+</ul><br class="clear">
+</div>
+{% endif %}

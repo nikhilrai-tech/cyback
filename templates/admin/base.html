@@ -1,0 +1,287 @@
+{% load i18n static humanize %}<!DOCTYPE html>
+{% get_current_language as LANGUAGE_CODE %}{% get_current_language_bidi as LANGUAGE_BIDI %}
+<html lang="{{ LANGUAGE_CODE|default:"en-us" }}" dir="{{ LANGUAGE_BIDI|yesno:'rtl,ltr,auto' }}">
+
+<head>
+    <title>{% block title %}{% endblock %}</title>
+
+    <link rel="shortcut icon" href="/static/logo.png" type="image/x-icon">
+
+    {% block extrastyle %}{% endblock %}
+    {% if LANGUAGE_BIDI %}<link rel="stylesheet" type="text/css" href="{% block stylesheet_rtl %}{% static "admin/css/rtl.css" %}{% endblock %}">{% endif %}
+    {% block extrahead %}{% endblock %}
+
+    {% block responsive %}
+        <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0">
+        {% if LANGUAGE_BIDI %}<link rel="stylesheet" type="text/css" href="{% static "admin/css/responsive_rtl.css" %}">{% endif %}
+    {% endblock %}
+
+    {% block blockbots %}<meta name="robots" content="NONE,NOARCHIVE">{% endblock %}
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static "admin/css/main.css" %}?{% now "U" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "admin/css/select.css" %}">
+
+</head>
+
+<body class="dark {% if is_popup %}popup {% endif %}{% block bodyclass %}{% endblock %}" data-admin-utc-offset="{% now "Z" %}">
+      
+    <div id="container" class="wrapper">
+
+      {% include 'includes/sidenav.html' %}
+      
+      <div class="main-panel main" id="main">
+        {% block header %}
+        
+          <nav class="navbar navbar-expand-lg navbar-absolute navbar-transparent">
+            <div class="container-fluid">
+              <div class="navbar-wrapper mt-3c">
+                
+                {% if not is_popup %}
+                <div class="navbar-toggle d-inline">
+                  <button type="button" class="navbar-toggler">
+                    <span class="navbar-toggler-bar bar1"></span>
+                    <span class="navbar-toggler-bar bar2"></span>
+                    <span class="navbar-toggler-bar bar3"></span>
+                  </button>
+                </div>
+                {% endif %}
+                  <h2 class="mb-0"><a class="navbar-brandc ml-0 text-info text-uppercasex display-3" href="/panel/">Cyber3ra</a></h2>
+              </div>
+              <button class="navbar-toggler d-none" type="button" data-toggle="collapse" data-target="#navigation" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-bar navbar-kebab"></span>
+                <span class="navbar-toggler-bar navbar-kebab"></span>
+                <span class="navbar-toggler-bar navbar-kebab"></span>
+              </button>
+
+                <ul class="navbar-nav ml-auto">
+                {% if request.user.is_authenticated %}
+                  <li class="dropdown nav-item">
+                    <a href="javascript:void(0)" class="dropdown-toggle nav-link" data-toggle="dropdown">
+                      <div class="notification d-none d-lg-block d-xl-block"></div>
+                      <i data-feather="bell" class="mt-1 " style="width: 20px;height: 20px;"></i>
+                      <p class="d-none">
+                        Notifications
+                      </p>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-right dropdown-navbar py-0 px-0 mt-0 noti-list" style="width: 300px; max-height: 400px; overflow-y: scroll;">
+                      <!-- <li class="nav-link"><a href="#" class="nav-item dropdown-item">No New Notifications</a></li> -->
+
+
+                      {% for noti in notis %}
+                      <li class="nav-link px-0 my-0">
+                        <a href="{{noti.link}}" class="nav-item dropdown-item px-2 py-2">
+                          <div class="noti">
+                            <div class="noti-main">
+                              <div class="noti-icon">
+                                <i data-feather="bell" class="feather-small"></i>
+                              </div>
+                              <div class="noti-content">
+                                <h5 class="noti-title mb-1">{{noti.title}}</h5>
+                                <p class="noti-subtitle">{{noti.body}}</p>
+                              </div>
+                            </div>
+                            <div class="noti-submain">
+                                <small class="noti-time text-mutedc">{{noti.pdate|naturaltime}}</small>
+                            </div>
+                          </div>
+                        </a>
+                      </li>
+                      {% endfor %}
+
+
+
+                    </ul>
+                  </li>
+                  <li class="dropdown nav-item">
+                    <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
+                      <div class="photo">
+                        <img src="{%if request.user.photo%}{{request.user.photo.url}}{%else%}/static/user.jpg{%endif%}" alt="{{request.user.name}}">
+                      </div>
+                      <p class="d-none">
+                        Options
+                      </p>
+                    </a>
+                    {% block usertools %}
+                    {% if request.user.is_authenticated %}
+                    <ul class="dropdown-menu dropdown-navbar">
+                        <li class="nav-link"><a href="{% url 'admin-profile' %}" class="nav-item dropdown-item">Profile</a></li>
+                      {% if user.has_usable_password %}
+                        <li class="nav-link"><a href="{% url 'admin:password_change' %}" class="nav-item dropdown-item">{% translate 'Change password' %}</a></li>
+                      {% endif %}
+                      <!-- <li class="nav-link"><a href="#" class="nav-item dropdown-item" onclick="toggletheme()">Toggle Theme</a></li> -->
+                      <li class="dropdown-divider"></li>
+                      <li class="nav-link"><a href="{% url 'admin:logout' %}" class="nav-item dropdown-item">Log out</a></li>
+                    </ul>
+                    {% endif %}
+                    {% endblock %}
+                  </li>
+
+                {% endif %}  
+                </ul>
+                
+            </div>
+          </nav>
+
+          <div class="modal modal-search fade" id="searchModal" tabindex="-1" role="dialog" aria-labelledby="searchModal" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <input type="text" class="form-controlc w-100" id="search" autofocus placeholder="Search Anything">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <i class="tim-icons icon-simple-remove"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <div class="content">
+          
+          <div class="content">
+            {% block messages %}
+              {% if messages %}
+                <ul class="messagelist">{% for message in messages %}
+                  <div class="alert {{ message.tags }} alert-active">
+                    {{ message|capfirst }}</div>
+                {% endfor %}</ul>
+              {% endif %}
+            {% endblock messages %}
+            <!-- Content -->
+            <div id="content" class="{% block coltype %}colM{% endblock %}">
+              {% block pretitle %}{% endblock %}
+              {% block content_title %}{% if title %}<h1>{{ title }}</h1>{% endif %}{% endblock %}
+              {% block content_subtitle %}{% if subtitle %}<h2>{{ subtitle }}</h2>{% endif %}{% endblock %}
+              {% block content %}
+                {% block object-tools %}{% endblock %}
+                {{ content }}
+              {% endblock %}
+              {% block sidebar %}{% endblock %}
+              </div>
+          </div>
+        </div>
+
+        {% block footer %}{% include 'includes/footer.html' %}{% endblock %}
+
+      </div>
+      <div class="backdrop"></div>
+      
+    </div>
+
+    <script src="/static/admin/js/icons.js" ></script>
+    <script>
+      feather.replace()
+    </script>
+    <script src="/static/admin/js/core/jquery.min.js"></script>
+    <script src="/static/admin/js/core/popper.min.js"></script>
+    <script src="/static/admin/js/core/bootstrap.min.js"></script>
+    
+    <script src="/static/admin/js/main.js?v=1.0.0"></script>
+    <script src="/static/admin/js/plugins/autocomplete.js"></script>
+
+    <script defer>
+      if(localStorage.getItem('theme')!==null){
+        if(localStorage.getItem('theme')=='dark'){
+          document.body.classList.replace('white-content','dark')
+        }
+        else if(localStorage.getItem('theme')=='light'){
+          document.body.classList.replace('dark','white-content')
+        }
+        else{
+          console.log('alag level theme')
+        }
+      }
+      else{
+        localStorage.setItem('theme','dark')
+      }
+
+      const toggletheme =() => {
+        // console.log('entered')
+      if(localStorage.getItem('theme')!==null){
+        if(localStorage.getItem('theme')=='dark'){
+          document.body.classList.replace('dark','white-content')
+          localStorage.setItem('theme','light')
+        }
+        else if(localStorage.getItem('theme')=='light'){
+          document.body.classList.replace('white-content','dark')
+          localStorage.setItem('theme','dark')
+        }
+        else{
+          console.log('alag level theme')
+        }
+        return true
+      }
+      }
+      
+      $('.backdrop').click(function(){
+        $('body').removeClass('side-open')
+      })
+
+      var $search = $('#search').selectize({
+          valueField: 'link',
+          labelField: 'title',
+          searchField: 'title',
+          maxItems: 1,
+          options : [
+            {title: 'Add Program',link: '/panel/main/program'},
+            {title: 'Send Email',link: '/panel/sendemail'},
+          ],
+          render: { option: (item, escape) => '<div class="option" data-selectable>'+item.title+ '</div>' },
+          //When user selects the widget we'll rememberize its value
+          // onFocus: function(){
+          //   $(this).data('temp-saved', $('#select-country').val());
+          // },
+
+          //On blur we check if the value has not changed
+          // onBlur: function(){
+          //   var previous = $(this).data('temp-saved');
+          //   var current = $('#select-country').val();
+
+          //   if (current == previous) {
+          //           console.log('NOT changed!');
+          //   }
+          // },
+
+          //And on change we sure that the value has changed
+          onChange: function(current){
+                window.location.href = current;
+            }
+          });
+    </script>
+  <script>
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+
+        document.querySelector(this.getAttribute('href')).scrollIntoView({
+            behavior: 'smooth'
+        });
+    });
+});
+  </script>
+{% block javascripts %}{% endblock %}
+</body>
+</html>

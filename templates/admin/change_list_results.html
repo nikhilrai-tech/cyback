@@ -1,0 +1,52 @@
+{% load i18n %}
+{% if result_hidden_fields %}
+<div class="hiddenfields">{# DIV for HTML validation #}
+{% for item in result_hidden_fields %}{{ item }}{% endfor %}
+</div>
+{% endif %}
+{% if results %}
+<div class="results card-body">
+<table id="result_list" class="w-100 table tablesorter">
+<thead>
+<tr>
+{% for header in result_headers %}
+<th scope="col"{{ header.class_attrib }}>
+   <div class="text d-flex align-items-center">
+     {% if header.sortable %}<a href="{{ header.url_primary }}" class="flex-grow-1">{{ header.text|capfirst }}</a>{% else %}<span>{{ header.text|capfirst }}</span>{% endif %}
+     
+   {% if header.sortable %}
+     {% if header.sort_priority > 0 %}
+       <div class="sortoptions">
+         {% if num_sorted_fields > 1 %}<span class="sortpriority" rel="tooltip" title="{% blocktranslate with priority_number=header.sort_priority %}Sorting priority: {{ priority_number }}{% endblocktranslate %}">{{ header.sort_priority }}</span>{% endif %}
+         <a href="{{ header.url_toggle }}" class="toggle {% if header.ascending %}ascending{% else %}descending{% endif %}"></a>
+         <a class="sortremove" href="{{ header.url_remove }}" rel="tooltip" title="{% translate "Remove from sorting" %}">
+           <i data-feather="x" style="width: 15px;height: 15px;"></i>
+         </a>
+       </div>
+     {% endif %}
+   {% endif %}
+
+    {% if header.sortable %}
+      {% if header.sort_priority > 0 %}
+        <div class="caret-wrapper">
+          <a rel="tooltip" href="{{ header.url_toggle }}" title="{% translate "Toggle sorting" %}" class="caret-ascending {% if header.ascending %}caret-active{% endif %}"></a>
+          <a rel="tooltip" href="{{ header.url_toggle }}" title="{% translate "Toggle sorting" %}" class="caret-descending {% if header.ascending %} {% else %}caret-active{% endif %}"></a>
+        </div>
+      {% endif %}
+    {% endif %}
+    </div>
+   <div class="clear"></div>
+</th>{% endfor %}
+</tr>
+</thead>
+<tbody>
+{% for result in results %}
+{% if result.form and result.form.non_field_errors %}
+    <tr><td colspan="{{ result|length }}">{{ result.form.non_field_errors }}</td></tr>
+{% endif %}
+<tr>{% for item in result %}{{ item }}{% endfor %}</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+{% endif %}

@@ -1,0 +1,120 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="x-apple-disable-message-reformatting">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Email</title>
+    <style>
+        :root {
+            --maxWidth: 700px;
+            --error: #d32f2f;
+            --warning: #ff9800;
+            --success: #43a047;
+            --info: #2196f3;
+        }
+        @media (max-width: 768px){
+            :root {
+                --maxWidth: 100%;
+            }
+        }
+        .cyber-messagelist {
+            position: absolute;
+            background-color: transparent;
+            top: 20px;
+            left: 50%;
+            transform: translate(-50%,50%);
+            width: auto;
+            min-width: 100px;
+            height: auto;
+            min-height: 25px;
+            z-index: 6000 !important;
+            list-style-type: none !important;
+        }
+        .warning {
+            background-color: var(--warning);
+            padding: 10px;
+            border-radius: 5px;
+            list-style-type: none;
+            color: white;
+        }
+        .error {
+            background-color: var(--error);
+            padding: 10px;
+            border-radius: 5px;
+            list-style-type: none;
+            color: white;
+        }
+        .success {
+            background-color: var(--success);
+            padding: 10px;
+            border-radius: 5px;
+            list-style-type: none;
+            color: white;
+        }
+        .info {
+            background-color: var(--info);
+            padding: 10px;
+            border-radius: 5px;
+            list-style-type: none;
+            color: white;
+        }
+        input[type=password] {
+            padding: 12px 8px;
+            outline: 0;
+            border-radius: 2px;
+            border: 1px solid rgba(255, 255, 255, 0.23);
+            background-color: transparent;
+            color: #d9e0ec;
+        }
+        input[type=password]:hover {
+            border: 1px solid #58a6ff;;
+        }
+        input[type=password]:focus {
+            box-shadow: #89d7ff55 0px 0px 10px 0px;
+            border: 1px solid #58a6ff;;
+        }
+    </style>
+</head>
+<body style="background-color: #0a0e14;color: #d9e0ec;font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important; display: flex;justify-content: center;">
+    
+    {% block messages %}
+    {% if messages %}
+      <ul class="cyber-messagelist">{% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|capfirst }}</li>
+      {% endfor %}</ul>
+    {% endif %}
+  {% endblock messages %}
+
+
+
+    <div class="container" style="background-color: transparent;width: var(--maxWidth);padding: 20px;">
+        <img src="https://i.ibb.co/ynMMt4x/logo.png" alt="Cyber3ra" width="50" height="50" />
+        <h4 style="font-weight: normal; font-size: 20px; color: #aee2fc !important; margin-top: 50px;">Reset your Password</h4>
+        <small>Password should be atleast 8 characters</small><br />
+        <small>Password should contain 1 digit</small><br />
+        <small>Password should contain 1 special character (@ or # only)</small><br /><br />
+        <!-- <p>{{code}} is the Verification Code for resetting your Account Password,</p> -->
+        <form method="POST" action="">
+        <!-- <form method="POST" action="/forgotpassword/{{token}}/{{newtoken}}"> -->
+            {% csrf_token %}
+            <input style="display: none;" value="{{token}}" name="token" >
+            <input type="password" placeholder="Enter New Password" name="password1" required /> <br /><br />
+            <input type="password" placeholder="Confirm New Password" name="password2" required /> <br /><br />
+            <input type="submit" value="Submit" style="outline: 0;color: white;background-color: #5fbff0; border-radius: 8px; box-shadow: 0px 0px 5px 1px #5fbff0; border: 0;padding: 8px 16px;text-decoration: none;" />
+        </form>
+        <p style="margin-bottom: 0px;">Please Note, the link will be valid for 5 hours only. Do not reload this page.</p>
+        <p style="margin-bottom: 0px;">Thank you.</p>
+        <div style="background-color: transparent;width: 100%;display: flex;flex-direction: column;margin-top: 70px;">
+            <small style="display: flex;justify-content: center; margin-top: 7px;margin-bottom: 0px;margin-right: 7px;">Beware of Spams</small>
+            <small style="color: #c6cfdd; display: flex;justify-content: center; margin-top: 7px;margin-bottom: 0px;margin-right: 7px;">©Cyber3ra. All Rights Reserved.</small>
+            <p style="color: #c6cfdd; display: flex;justify-content: center;margin-top: 7px;">
+                <small><a style="color: inherit;margin-right: 7px;" href='https://cyber3ra.com'>Goto App</a></small>
+                <small><a style="color: inherit;margin-right: 7px;" href='https://cyber3ra.com/auth/login'>Login</a></small>
+                <small><a style="color: inherit;margin-right: 7px;" href='https://cyber3ra.com/'>Landing</a></small>
+            </p>
+        </div>
+    </div>
+</body>
+</html>

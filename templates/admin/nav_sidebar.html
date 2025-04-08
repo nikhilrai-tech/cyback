@@ -1,0 +1,8 @@
+{% load i18n %}
+<button class="sticky toggle-nav-sidebar d-none" id="toggle-nav-sidebar" aria-label="{% translate 'Toggle navigation' %}"></button>
+<nav class="sticky d-nonec" id="nav-sidebar">
+  <input type="search" id="nav-filter" class="d-none"
+         placeholder="{% translate 'Start typing to filter...' %}"
+         aria-label="{% translate 'Filter navigation items' %}">
+  {% include 'admin/app_list.html' with app_list=available_apps show_changelinks=False %}
+</nav>
