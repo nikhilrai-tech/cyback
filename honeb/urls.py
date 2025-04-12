@@ -29,6 +29,7 @@ urlpatterns = [
     # path('action/', include('back.urls')),
     path('app/accounts/', include('back.newurls')),
     path('app/main/', include('main.urls')),
+    path('', include('ctf.urls')),
     path('app/user/', include('other.urls')),
     url(r'^media/(?P<path>.*)$', serve,{'document_root': settings.MEDIA_ROOT}), 
     url(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
