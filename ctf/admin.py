@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Challenge, Question, UserProfile, Participation
+from .models import Challenge, Question, UserProfile, Participation,UserAnswer
 
 class QuestionInline(admin.TabularInline):
     model = Question
@@ -27,3 +27,10 @@ admin.site.register(Challenge, ChallengeAdmin)
 admin.site.register(Question, QuestionAdmin)
 admin.site.register(UserProfile, UserProfileAdmin)
 admin.site.register(Participation, ParticipationAdmin)
+
+class UserAnswerAdmin(admin.ModelAdmin):
+    list_display = ('user', 'question', 'answer', 'is_correct', 'created_at')
+    list_filter = ('is_correct', 'created_at')
+    search_fields = ('user__username', 'question__title', 'answer')
+
+admin.site.register(UserAnswer, UserAnswerAdmin)

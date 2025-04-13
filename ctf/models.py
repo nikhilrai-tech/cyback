@@ -35,6 +35,7 @@ class Question(models.Model):
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     points = models.IntegerField(default=0)
+    challenges_solved = models.IntegerField(default=0)  # Add this field
 
     def __str__(self):
         return f"{self.user.username} - {self.points} points"
@@ -49,3 +50,21 @@ class Participation(models.Model):
 
     def __str__(self):
         return f"{self.user.username} in {self.challenge.name}"
+    
+class UserAnswer(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='answers')
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='user_answers')
+    answer = models.CharField(max_length=100)  # User's submitted answer
+    is_correct = models.BooleanField(default=False)  # To track if the answer is correct
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.question.title} - {'Correct' if self.is_correct else 'Incorrect'}"
+    
+class StudentDetail(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='student_detail')
+    college = models.CharField(max_length=100)
+    roll_number = models.CharField(max_length=50)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.college}"
