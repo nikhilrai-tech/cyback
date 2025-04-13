@@ -153,8 +153,15 @@ class ChallengeQuestionsView(generics.ListAPIView):
         except Challenge.DoesNotExist:
             return Response({'error': 'Challenge not found.'}, status=status.HTTP_404_NOT_FOUND)
 
+from rest_framework import generics, status
+from rest_framework.response import Response
+from .models import UserAnswer
+
+# Custom permission class to allow any user
+from rest_framework.permissions import AllowAny
+
 class SubmitAnswersView(generics.CreateAPIView):
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]  # Allow any user to access this view
 
     def post(self, request, challenge_id):
         answers = request.data.get('answers', [])
@@ -162,12 +169,22 @@ class SubmitAnswersView(generics.CreateAPIView):
             question_id = answer.get('questionId')
             user_answer = answer.get('answer')
 
-            # Save the user's answer
-            UserAnswer.objects.update_or_create(
-                user=request.user,
-                question_id=question_id,
-                defaults={'answer': user_answer}
-            )
+            # Check if the user is authenticated
+            if request.user.is_authenticated:
+                # Save the user's answer
+                UserAnswer.objects.update_or_create(
+                    user=request.user,
+                    question_id=question_id,
+                    defaults={'answer': user_answer}
+                )
+            else:
+                # Handle unauthenticated user case
+                # You can choose to save the answer without a user or handle it differently
+                UserAnswer.objects.update_or_create(
+                    user=None,  # Or handle as needed
+                    question_id=question_id,
+                    defaults={'answer': user_answer}
+                )
 
         return Response({'message': 'Answers submitted successfully!'}, status=status.HTTP_201_CREATED)
     
