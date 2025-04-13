@@ -29,6 +29,7 @@ class ChallengeViewSet(viewsets.ReadOnlyModelViewSet):
         
 class StudentDetailView(generics.CreateAPIView):
     serializer_class = StudentDetailSerializer
+    # permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
         print("Received request to save student details.")
@@ -74,7 +75,7 @@ class ParticipationStatsView(generics.GenericAPIView):
         })
 from rest_framework.permissions import IsAuthenticated
 class JoinChallengeView(generics.GenericAPIView):
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
     def post(self, request, challenge_id, *args, **kwargs):
         print(f"User {request.user.username} is trying to join challenge {challenge_id}...")
         try:
@@ -141,7 +142,7 @@ from .models import Challenge, Question, UserAnswer
 from .serializers import QuestionSerializer
 
 class ChallengeQuestionsView(generics.ListAPIView):
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
 
     def get(self, request, challenge_id):
         try:
@@ -153,7 +154,7 @@ class ChallengeQuestionsView(generics.ListAPIView):
             return Response({'error': 'Challenge not found.'}, status=status.HTTP_404_NOT_FOUND)
 
 class SubmitAnswersView(generics.CreateAPIView):
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
 
     def post(self, request, challenge_id):
         answers = request.data.get('answers', [])
@@ -171,7 +172,7 @@ class SubmitAnswersView(generics.CreateAPIView):
         return Response({'message': 'Answers submitted successfully!'}, status=status.HTTP_201_CREATED)
     
 class UserStatsView(generics.RetrieveAPIView):
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
 
     def get(self, request):
         try:
