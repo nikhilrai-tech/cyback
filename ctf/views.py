@@ -165,25 +165,29 @@ class SubmitAnswersView(generics.CreateAPIView):
 
     def post(self, request, challenge_id):
         answers = request.data.get('answers', [])
+        print(answers)
         for answer in answers:
             question_id = answer.get('questionId')
             user_answer = answer.get('answer')
 
             # Check if the user is authenticated
             if request.user.is_authenticated:
+                # Get the question to check the correct flag
+                question = Question.objects.get(id=question_id)
+                is_correct = user_answer == question.flag  # Check if the answer matches the flag
+
                 # Save the user's answer
                 UserAnswer.objects.update_or_create(
                     user=request.user,
-                    question_id=question_id,
-                    defaults={'answer': user_answer}
+                    question=question,
+                    defaults={'answer': user_answer, 'is_correct': is_correct}
                 )
             else:
                 # Handle unauthenticated user case
-                # You can choose to save the answer without a user or handle it differently
                 UserAnswer.objects.update_or_create(
                     user=None,  # Or handle as needed
                     question_id=question_id,
-                    defaults={'answer': user_answer}
+                    defaults={'answer': user_answer, 'is_correct': user_answer == question.flag}
                 )
 
         return Response({'message': 'Answers submitted successfully!'}, status=status.HTTP_201_CREATED)

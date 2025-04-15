@@ -23,7 +23,7 @@ class ParticipationSerializer(serializers.ModelSerializer):
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
-        fields = ['id', 'title', 'description', 'points']  # Include points if needed
+        fields = ['id', 'title', 'description', 'points', 'file_upload', 'image']  # Include new fields
 
 class SubmitAnswerSerializer(serializers.Serializer):
     questionId = serializers.IntegerField()

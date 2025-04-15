@@ -25,6 +25,8 @@ class Question(models.Model):
     flag = models.CharField(max_length=100, help_text="The correct flag/answer for this question.")
     points = models.IntegerField(default=100, help_text="Points awarded for solving this question.")
     created_at = models.DateTimeField(auto_now_add=True)
+    file_upload = models.FileField(upload_to='uploads/', null=True, blank=True)
+    image = models.ImageField(upload_to='images/', null=True, blank=True)
 
     def __str__(self):
         return f"{self.title} (in {self.challenge.name})"
