@@ -159,29 +159,37 @@ from .models import UserAnswer
 
 # Custom permission class to allow any user
 from rest_framework.permissions import AllowAny
-
 class SubmitAnswersView(generics.CreateAPIView):
     permission_classes = [AllowAny]  # Allow any user to access this view
 
     def post(self, request, challenge_id):
         answers = request.data.get('answers', [])
         print(answers)
+        user = request.user
+        certificate_generated = False  # Flag to check if certificate is generated
+
         for answer in answers:
             question_id = answer.get('questionId')
             user_answer = answer.get('answer')
 
             # Check if the user is authenticated
-            if request.user.is_authenticated:
+            if user.is_authenticated:
                 # Get the question to check the correct flag
                 question = Question.objects.get(id=question_id)
                 is_correct = user_answer == question.flag  # Check if the answer matches the flag
 
                 # Save the user's answer
                 UserAnswer.objects.update_or_create(
-                    user=request.user,
+                    user=user,
                     question=question,
                     defaults={'answer': user_answer, 'is_correct': is_correct}
                 )
+
+                # If the answer is correct, generate the certificate
+                if is_correct and not certificate_generated:
+                    self.generate_certificate(user, challenge_id)
+                    certificate_generated = True  # Ensure we only generate one certificate
+
             else:
                 # Handle unauthenticated user case
                 UserAnswer.objects.update_or_create(
@@ -191,6 +199,31 @@ class SubmitAnswersView(generics.CreateAPIView):
                 )
 
         return Response({'message': 'Answers submitted successfully!'}, status=status.HTTP_201_CREATED)
+
+    def generate_certificate(self, user, challenge_id):
+        # Create a certificate image
+        certificate = Image.new('RGB', (800, 600), color='white')
+        draw = ImageDraw.Draw(certificate)
+
+        # Load a font
+        font = ImageFont.load_default()
+
+        # Draw text on the certificate
+        draw.text((100, 100), "Certificate of Completion", fill="black", font=font)
+        draw.text((100, 200), f"This certifies that {user.username}", fill="black", font=font)
+        draw.text((100, 300), "has successfully completed the challenge.", fill="black", font=font)
+
+        # Save the certificate to a BytesIO object
+        buffer = BytesIO()
+        certificate.save(buffer, format='PNG')
+        buffer.seek(0)
+
+        # Save the certificate to the default storage
+        file_name = f"certificates/{user.username}_certificate.png"
+        default_storage.save(file_name, ContentFile(buffer.getvalue()))
+
+        # Optionally, you can return the URL of the generated certificate
+        return f"http://localhost:8000/media/{file_name}"
     
 class UserStatsView(generics.RetrieveAPIView):
     # permission_classes = [IsAuthenticated]
@@ -207,4 +240,39 @@ class UserStatsView(generics.RetrieveAPIView):
         except UserProfile.DoesNotExist:
             return Response({'error': 'User profile not found.'}, status=404)
     
+
+from rest_framework import generics, status
+from rest_framework.response import Response
+from django.core.files.base import ContentFile
+from django.core.files.storage import default_storage
+from PIL import Image, ImageDraw, ImageFont
+from io import BytesIO
+from .models import UserAnswer
+
+from rest_framework import generics, status
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from .models import UserProfile  # Assuming you have a UserProfile model to store user data
+
+class GenerateCertificateView(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        # Fetch certificates for the user
+        certificates = []  # Replace with actual logic to fetch certificates
+
+        # Assuming you have a way to get the certificates from the UserProfile or UserAnswer
+        user_answers = UserAnswer.objects.filter(user=user)
+        for answer in user_answers:
+            # Assuming you have a way to get the challenge name and certificate URL
+            challenge_name = answer.question.challenge.name  # Adjust according to your model
+            certificate_url = f"http://localhost:8000/media/certificates/{user.username}_certificate.png"  # Adjust path as needed
+            certificates.append({
+                'id': answer.id,
+                'challenge_name': challenge_name,
+                'url': certificate_url,
+            })
+
+        return Response(certificates, status=status.HTTP_200_OK)
 

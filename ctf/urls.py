@@ -1,7 +1,7 @@
 # ctf_app/urls.py
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import ChallengeViewSet,StudentDetailView, LeaderboardView, ParticipationStatsView, JoinChallengeView,CheckAnswerView,ChallengeQuestionsView,SubmitAnswersView,UserStatsView
+from .views import ChallengeViewSet,GenerateCertificateView,StudentDetailView, LeaderboardView, ParticipationStatsView, JoinChallengeView,CheckAnswerView,ChallengeQuestionsView,SubmitAnswersView,UserStatsView
 
 router = DefaultRouter()
 router.register(r'challenges', ChallengeViewSet)
@@ -17,4 +17,5 @@ urlpatterns = [
     path('api/leaderboard/', LeaderboardView.as_view(), name='leaderboard'),
     path('api/user/stats/', UserStatsView.as_view(), name='user-stats'),
     path('api/student/details/', StudentDetailView.as_view(), name='student-details'),
+    path('generate-certificate/', GenerateCertificateView.as_view(), name='generate-certificate'),
 ]
