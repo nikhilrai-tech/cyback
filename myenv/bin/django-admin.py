@@ -1,4 +1,4 @@
-#!/home/lenovo/Desktop/cyber/cyber3ra-backend/myenv/bin/python3
+#!/home/alex-rai/Videos/securium/cyback/myenv/bin/python3
 # When the django-admin.py deprecation ends, remove this script.
 import warnings
 

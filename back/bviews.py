@@ -57,7 +57,7 @@ class IsUser(BasePermission):
 
 
 # DOMAIN = 'http://localhost:3005'
-DOMAIN = 'https://app.cyber3ra.com'
+DOMAIN = 'https://cyfront.vercel.app'
 # Create your views here.
 def index(request):
     # print(default_token_generator.check_token(User.objects.get(id=807),'auxmp2-985e1dd25fda9f30f4039cf11ace0a6b'))
@@ -120,7 +120,7 @@ def login(request):
     else:
         # user = User.objects.get(Q(username=request.data['username'])|Q(email=request.data['username']))
         # name = user.name if user.name else user.username
-        send_html_mail('Failed Login Attempt',{'name': usern.name if usern.name else usern.username,'message': 'Dear '+usern.name if usern.name else usern.username+", We noticed a new sign in to your Cyber3ra account. If it was you, you don't need to do anything. If not, please contact the admin"},'email/desc.html',[usern.email],[],[],[])
+        send_html_mail('Failed Login Attempt',{'name': usern.name if usern.name else usern.username,'message': 'Dear '+usern.name if usern.name else usern.username+", We noticed a new sign in to your SecuriumX account. If it was you, you don't need to do anything. If not, please contact the admin"},'email/desc.html',[usern.email],[],[],[])
         return Response ({ "error": True,'message': 'Incorrect Username/Email or Password'})
 
 
@@ -288,7 +288,7 @@ def verify2(request):
                     send_html_mail('Account Verified',{'name': user.username},'email/confirm.html',[user.email],[],[],[])
                     return Response({"error": False,"status": "200","message": "Account Verified Successfully. Password will be mailed to you as soon as the admin will go through and activate your account or Admin will contact you shortly."})
                 send_html_mail('Account Activated',{'name': user.username},'email/confirm.html',[user.email],[],[],[])
-            return Response({"error": False,"status": "200","message": "Account Activated Successfully. You may login to Cyber3ra now."})
+            return Response({"error": False,"status": "200","message": "Account Activated Successfully. You may login to SecuriumX now."})
         else:
             if user.email_confirmed:
                 return Response({"error": True,"status": "210","message": "Link Expired. Account already verified"})
@@ -766,8 +766,8 @@ def contact(request):
         auth = False
     if auth:
         # send_html_mail('Message from Signed Up User',{},'',['adarshknt@gmail.com'],[])
-        add_noti_single_email(user, 'Thank you for contacting Cyber3ra',"Thank you for contacting us. We will get back to you as soon as possible")
-        send_html_mail('New Message from Signed Up User',{'name': 'Adarsh','message': f"Message from {user.name if user.name else user.username}, <br /> Subject: {request.data['subject']} <br /> Message: {request.data['message']}"},'email/desc.html',["adarshknt@gmail.com","cyber3ra@gmail.com","vivekbilla345@gmail.com"],[],[],[])
+        add_noti_single_email(user, 'Thank you for contacting SecuriumX',"Thank you for contacting us. We will get back to you as soon as possible")
+        send_html_mail('New Message from Signed Up User',{'name': 'Adarsh','message': f"Message from {user.name if user.name else user.username}, <br /> Subject: {request.data['subject']} <br /> Message: {request.data['message']}"},'email/desc.html',["nikhilrai662@gmail.com","nikhilrai662@gmail.com","nikhilrai662@gmail.com"],[],[],[])
         return Response({'error': False,'message': 'Message sent Successfully','show': True})
     else:
         if len(request.data['email']) < 1 or len(request.data['name']) < 1:
@@ -775,6 +775,6 @@ def contact(request):
         if not re.match(r"[^@]+@[^@]+\.[^@]+", request.data['email']):
             return Response({"error": True,"message": 'Enter a Valid Email'})
         # send_html_mail('Message from Anonymous User',{},'',['adarshknt@gmail.com'],[])
-        send_html_mail('Thank you for contacting Cyber3ra',{'name': request.data['name'],'message': f"Thank you for contacting us. We will get back to you as soon as possible"},'email/desc.html',[request.data['email']],[],[],[])
-        send_html_mail('New Message from Anonymous User',{'name': 'Adarsh','message': f"Message from {request.data['name']} ({request.data['email']}), <br /> Subject: {request.data['subject']} <br /> Message: {request.data['message']}"},'email/desc.html',["adarshknt@gmail.com","cyber3ra@gmail.com","vivekbilla345@gmail.com"],[],[],[])
+        send_html_mail('Thank you for contacting SecuriumX',{'name': request.data['name'],'message': f"Thank you for contacting us. We will get back to you as soon as possible"},'email/desc.html',[request.data['email']],[],[],[])
+        send_html_mail('New Message from Anonymous User',{'name': 'Adarsh','message': f"Message from {request.data['name']} ({request.data['email']}), <br /> Subject: {request.data['subject']} <br /> Message: {request.data['message']}"},'email/desc.html',["nikhilrai662@gmail.com","nikhilrai662@gmail.com","nikhilrai662@gmail.com"],[],[],[])
         return Response({'error': False,'message': 'Message sent Successfully','show': True})
