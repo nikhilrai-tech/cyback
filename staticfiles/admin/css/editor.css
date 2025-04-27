@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap');
 
 .cke_editable {
-    font-family: -apple-system, BlinkMacSystemFont, Rajdhani, sans-serif !important;
+    font-family: -apple-system, BlinkMacSystemFont, Poppins, sans-serif !important;
     color: #8292bb !important;
     margin: 5px;
     background-color: transparent !important; 
