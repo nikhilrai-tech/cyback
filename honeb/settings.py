@@ -228,7 +228,7 @@ CORS_ALLOWED_ORIGINS = [
     # 'http://127.0.0.1:3005',
     # 'http://127.0.0.1:53622',
     'https://cyfront.vercel.app',
-    'http://172.26.41.4:3500'
+    'http://localhost:3500'
     # 'http://cyber3ra.com',
 ]
 
@@ -242,7 +242,7 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'nikhilrai662@gmail.com'
 EMAIL_HOST_PASSWORD = 'mnkr wvoa drfo rauv'
 
-EMAIL_HOST_NAME = 'Cyber3ra <'+EMAIL_HOST_USER+'>'
+EMAIL_HOST_NAME = 'SecuriumX <'+EMAIL_HOST_USER+'>'
 # EMAIL_HOST_NAME = 'no-reply@cyber3ra.com'
 
 

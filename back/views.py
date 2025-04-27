@@ -199,7 +199,7 @@ def duplicate(request):
             num+=1
         except Exception as e:
             try:
-                user = User.objects.create_user(username=ele['username'], email=ele['email'], name=ele['name'] if 'name' in ele else '', other=int(ele['total reputation']), active=False, password=ele['username']+"@Cyber3ra")
+                user = User.objects.create_user(username=ele['username'], email=ele['email'], name=ele['name'] if 'name' in ele else '', other=int(ele['total reputation']), active=False, password=ele['username']+"@SecuriumX")
             except Exception as er:
                 print(er, ele['username'], ele['email'])
     print(num)
