@@ -223,7 +223,7 @@ STATICFILES_DIRS = [
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3500",
-    'http://127.0.0.1:3500',
+    'http://172.20.10.2:3500',
     # "http://localhost:3005",
     # 'http://127.0.0.1:3005',
     # 'http://127.0.0.1:53622',
