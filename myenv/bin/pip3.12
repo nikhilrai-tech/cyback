@@ -1,4 +1,6 @@
-#!/home/lenovo/Desktop/cyber/cyber3ra-backend/myenv/bin/python3
+#!/bin/sh
+'''exec' "/home/alex/Desktop/pr secx/stagging/cyback/myenv/bin/python3" "$0" "$@"
+' '''
 # -*- coding: utf-8 -*-
 import re
 import sys
